@@ -347,7 +347,7 @@
         .fuel-level {
             height: 100%;
             background: linear-gradient(90deg, #ff4444, #ffaa00, #44ff44);
-            width: 0%; /* Inicia em 0 e é atualizado via JS */
+            width: 0%; /* Inicia em 0 e é atualizado via JS, mas somente em multiplos de 25%*/
             transition: width 0.8s ease-out;
         }
         .efficiency-text {
@@ -357,7 +357,7 @@
             margin-top: 4px;
             font-weight: 500;
         }
-
+ 
         /* Mensagens de resultado */
         .message {
             display: flex;
@@ -368,7 +368,7 @@
             margin-bottom: 0.5rem;
             animation: fadeIn 0.3s ease-in;
         }
-
+        /* animação do botão~ */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateX(-10px); }
             to { opacity: 1; transform: translateX(0); }
