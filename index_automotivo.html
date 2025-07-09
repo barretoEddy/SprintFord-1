@@ -717,25 +717,32 @@
             hideLoading(); 
 
             // (primeira questão) Solicita a distância percorrida
-            let distanciaPercorridaStr = getInput("Qual a distância percorrida da sua casa até seu trabalho (em km)?");
-            if (distanciaPercorridaStr === null) return;
-            let distanciaPercorrida = parseFloat(distanciaPercorridaStr);
+            let distanciaPercorrida;
+            while (true) {
+                let distanciaPercorridaStr = getInput("Qual a distância percorrida da sua casa até seu trabalho (em km)?");
+                if (distanciaPercorridaStr === null) return;
+                distanciaPercorrida = parseFloat(distanciaPercorridaStr);
 
-            if (!isPositiveNumber(distanciaPercorrida)) {
-                showResults();
-                writeMessage("A distância percorrida inserida não é um número válido ou é menor ou igual a zero. Por favor, insira um número positivo.", 'error');
-                return;
+                if (!isPositiveNumber(distanciaPercorrida)) {
+                    showResults();
+                    writeMessage("A distância percorrida inserida não é um número válido ou é menor ou igual a zero. Por favor, insira um número positivo.", 'error');
+                } else {
+                    break;
+                }
             }
 
             //(segunda questão) Solicita o consumo médio em km/L
-            let consumoMedioStr = getInput("Qual o consumo médio do seu veículo (em Km/L)?");
-            if (consumoMedioStr === null) return;
-            let consumoMedio = parseFloat(consumoMedioStr);
+            let consumoMedio;
+            while (true) {
+                let consumoMedioStr = getInput("Qual o consumo médio do seu veículo (em Km/L)?");
+                if (consumoMedioStr === null) return;
+                consumoMedio = parseFloat(consumoMedioStr);
 
-            if (!isPositiveNumber(consumoMedio)) {
-                showResults();
-                writeMessage("O consumo médio inserido não é um número válido ou é zero/negativo. Por favor, insira um número positivo.", 'error');
-                return;
+                if (!isPositiveNumber(consumoMedio)) {
+                    // Apenas pede novamente sem exibir mensagem de erro
+                } else {
+                    break;
+                }
             }
 
             // (terceira questão) Calcula o consumo necessário
@@ -747,13 +754,17 @@
             writeMessage(`⛽ Consumo necessário: ${consumoNecessarioLitros.toFixed(2)} litros`, 'success');
 
             // Solicita quantidade de postos
-            let quantidadePostosStr = getInput("Em quantos postos você pesquisou preços?");
-            if (quantidadePostosStr === null) return;
-            let quantidadePostos = parseInt(quantidadePostosStr);
+            let quantidadePostos;
+            while (true) {
+                let quantidadePostosStr = getInput("Em quantos postos você pesquisou preços?");
+                if (quantidadePostosStr === null) return;
+                quantidadePostos = parseInt(quantidadePostosStr);
 
-            if (!Number.isInteger(quantidadePostos) || quantidadePostos <= 0) {
-                writeMessage("A quantidade de postos inserida não é um número inteiro válido ou é zero/negativa.", 'error');
-                return;
+                if (isNaN(quantidadePostos) || !Number.isInteger(quantidadePostos) || quantidadePostos <= 0) {
+                    // Apenas pede novamente sem exibir mensagem de erro
+                } else {
+                    break; //odeio fazer isso
+                }
             }
 
             // Coleta valores dos postos com validação para > 0
