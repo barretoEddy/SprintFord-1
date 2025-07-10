@@ -571,261 +571,253 @@
         </div>
     </div>
 <!-- Aqui começa o JavaScript -->
-    <script>
-        // Função para escrever mensagens na div de resultados
-        function writeMessage(message, type = 'info') {
-            const resultContent = document.getElementById('resultContent');
-            const div = document.createElement('div');
-            
-            let icon = '';
-            
-            switch(type) {
-                case 'success':
-                    icon = '✅';
-                    break;
-                case 'warning':
-                    icon = '⚠️';
-                    break;
-                case 'error':
-                    icon = '❌';
-                    break;
-                default:
-                    icon = 'ℹ️';
+<script>
+    // =========================
+    // MÓDULO: Interface de Usuário
+    // =========================
+
+    /**
+     * Exibe uma mensagem formatada na área de resultados.
+     * @param {string} message - Texto da mensagem.
+     * @param {string} type - Tipo ('info', 'success', 'warning', 'error').
+     */
+    function writeMessage(message, type = 'info') {
+        const resultContent = document.getElementById('resultContent');
+        const div = document.createElement('div');
+        let icon = '';
+        switch(type) {
+            case 'success': icon = '✅'; break;
+            case 'warning': icon = '⚠️'; break;
+            case 'error': icon = '❌'; break;
+            default: icon = 'ℹ️';
+        }
+        div.className = `message ${type}`;
+        div.innerHTML = `<div class="message-icon">${icon}</div><p class="message-text">${message}</p>`;
+        resultContent.appendChild(div);
+    }
+
+    /**
+     * Adiciona um separador visual na área de resultados.
+     */
+    function addSeparator() {
+        const resultContent = document.getElementById('resultContent');
+        const separator = document.createElement('div');
+        separator.className = 'separator';
+        resultContent.appendChild(separator);
+    }
+
+    /**
+     * Atualiza o indicador de eficiência do veículo.
+     * @param {number} consumoMedio - Consumo médio em km/L.
+     */
+    function updateEfficiencyGauge(consumoMedio) {
+        const fuelLevel = document.getElementById('fuelLevel');
+        const efficiencyText = document.getElementById('efficiencyText');
+        const indicator = document.getElementById('efficiencyIndicator');
+        if (consumoMedio <= 0) {
+            indicator.classList.add('hidden');
+            fuelLevel.style.width = '0%';
+            return;
+        }
+        indicator.classList.remove('hidden');
+        let efficiencyPercentage = 0;
+        if (consumoMedio < 10) efficiencyPercentage = 25;
+        else if (consumoMedio < 15) efficiencyPercentage = 50;
+        else if (consumoMedio < 20) efficiencyPercentage = 80;
+        else efficiencyPercentage = 100;
+        fuelLevel.style.width = `${efficiencyPercentage}%`;
+        efficiencyText.textContent = `Nível de Eficiência do Veículo: ${efficiencyPercentage}%`;
+    }
+
+    /**
+     * Exibe a animação de carregamento e desabilita o botão.
+     */
+    function showLoading() {
+        document.getElementById('loadingAnimation').classList.remove('hidden');
+        document.getElementById('startButton').disabled = true;
+    }
+
+    /**
+     * Oculta a animação de carregamento e habilita o botão.
+     */
+    function hideLoading() {
+        document.getElementById('loadingAnimation').classList.add('hidden');
+        document.getElementById('startButton').disabled = false;
+    }
+
+    /**
+     * Exibe a área de resultados e faz scroll até ela.
+     */
+    function showResults() {
+        document.getElementById('output').classList.remove('hidden');
+        setTimeout(() => {
+            document.getElementById('output').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 300);
+    }
+
+    // =========================
+    // MÓDULO: Entrada e Validação
+    // =========================
+
+    /**
+     * Solicita um valor ao usuário via prompt.
+     * @param {string} message - Mensagem do prompt.
+     * @returns {string|null} Valor digitado ou null se cancelado.
+     */
+    function getInput(message) {
+        return prompt(`🔢 ${message}`);
+    }
+
+    /**
+     * Verifica se o valor é um número positivo.
+     * @param {any} value - Valor a ser testado.
+     * @returns {boolean}
+     */
+    function isPositiveNumber(value) {
+        return !isNaN(value) && value > 0;
+    }
+
+    /**
+     * Solicita e valida um número positivo do usuário.
+     * @param {string} promptMsg - Mensagem do prompt.
+     * @returns {number|null} Valor válido ou null se cancelado.
+     */
+    async function getPositiveNumber(promptMsg) {
+        while (true) {
+            let valueStr = getInput(promptMsg);
+            if (valueStr === null) return null;
+            let value = parseFloat(valueStr);
+            if (isPositiveNumber(value)) return value;
+            // Não exibe mensagem de erro, apenas repete
+        }
+    }
+
+    /**
+     * Solicita e valida um número inteiro positivo do usuário.
+     * @param {string} promptMsg - Mensagem do prompt.
+     * @returns {number|null} Valor válido ou null se cancelado.
+     */
+    async function getPositiveInteger(promptMsg) {
+        while (true) {
+            let valueStr = getInput(promptMsg);
+            if (valueStr === null) return null;
+            let value = parseInt(valueStr);
+            if (!isNaN(value) && Number.isInteger(value) && value > 0) return value;
+            // Não exibe mensagem de erro, apenas repete
+        }
+    }
+
+    // =========================
+    // MÓDULO: Coleta e Cálculo de Preços
+    // =========================
+
+    /**
+     * Solicita ao usuário os preços dos postos e retorna estatísticas.
+     * Cancela toda a análise se algum valor for cancelado.
+     * @param {number} quantidadePostos - Quantidade de postos a pesquisar.
+     * @returns {Promise<{somaValores:number, menorValor:number, valoresValidos:number}|null>}
+     */
+    async function collectFuelPrices(quantidadePostos) {
+        let somaValores = 0;
+        let menorValor = Infinity;
+        let valoresValidos = 0;
+        for (let i = 1; i <= quantidadePostos; i++) {
+            let valor = await getPositiveNumber(`Digite o valor encontrado (em R$) no posto ${i} (maior que 0):`);
+            if (valor === null) {
+                // UX: Cancela toda a análise e retorna null
+                return null;
             }
-            
-            div.className = `message ${type}`;
-            div.innerHTML = `
-                <div class="message-icon">${icon}</div>
-                <p class="message-text">${message}</p>
-            `;
-            
-            resultContent.appendChild(div);
+            somaValores += valor;
+            valoresValidos++;
+            if (valor < menorValor) menorValor = valor;
+            writeMessage(`🏪 Posto ${i}: R$ ${valor.toFixed(2)}`, 'info');
         }
+        return { somaValores, menorValor, valoresValidos };
+    }
 
-        // Função para adicionar separador (esteticamente agradável)
-        function addSeparator() {
-            const resultContent = document.getElementById('resultContent');
-            const separator = document.createElement('div');
-            separator.className = 'separator';
-            resultContent.appendChild(separator);
+    // =========================
+    // MÓDULO: Cálculos de Consumo e Resultados
+    // =========================
+
+    /**
+     * Realiza todos os cálculos e exibe os resultados.
+     * Cancela tudo se algum preço for cancelado.
+     */
+    async function calcularResultados(distanciaPercorrida, consumoMedio, quantidadePostos) {
+        // Consumo necessário para ida
+        let consumoNecessarioLitros = distanciaPercorrida / consumoMedio;
+        updateEfficiencyGauge(consumoMedio);
+        showResults();
+        writeMessage(`🚗 Distância analisada: ${distanciaPercorrida} km | Eficiência: ${consumoMedio} km/L`, 'info');
+        writeMessage(`⛽ Consumo necessário: ${consumoNecessarioLitros.toFixed(2)} litros`, 'success');
+
+        // Coleta preços dos postos
+        const result = await collectFuelPrices(quantidadePostos);
+        if (!result) {
+            // UX: Mensagem clara de cancelamento
+            addSeparator();
+            writeMessage("Operação cancelada pelo usuário. Nenhum resultado foi gerado.", 'warning');
+            return;
         }
+        const { somaValores, menorValor, valoresValidos } = result;
 
-        // Função para atualizar o indicador de eficiência
-        function updateEfficiencyGauge(consumoMedio) {
-            const fuelLevel = document.getElementById('fuelLevel');
-            const efficiencyText = document.getElementById('efficiencyText');
-            const indicator = document.getElementById('efficiencyIndicator');
+        addSeparator();
 
-            if (consumoMedio <= 0) {
-                indicator.classList.add('hidden'); // Oculta se não houver consumo válido
-                fuelLevel.style.width = '0%';
-                return;
-            }
-            
-            indicator.classList.remove('hidden');
-            // Define a largura do nível de combustível com base no consumo médio
-            let efficiencyPercentage = 0;
-            if (consumoMedio < 10) efficiencyPercentage = 25;
-            else if (consumoMedio < 15) efficiencyPercentage = 50;
-            else if (consumoMedio < 20) efficiencyPercentage = 80;
-            else efficiencyPercentage = 100;
-
-            fuelLevel.style.width = `${efficiencyPercentage}%`;
-            efficiencyText.textContent = `Nível de Eficiência do Veículo: ${efficiencyPercentage}%`;
-        }
-
-        // Funções de controle da interface
-        function showLoading() {
-            document.getElementById('loadingAnimation').classList.remove('hidden');
-            document.getElementById('startButton').disabled = true;
-        }
-
-        function hideLoading() {
-            document.getElementById('loadingAnimation').classList.add('hidden');
-            document.getElementById('startButton').disabled = false;
-        }
-
-        function showResults() {
-            document.getElementById('output').classList.remove('hidden');
-            setTimeout(() => {
-                document.getElementById('output').scrollIntoView({ 
-                    behavior: 'smooth', 
-                    block: 'nearest' 
-                });
-            }, 300);
-        }
-
-        // Função para solicitar entrada do usuário (todos os dados do prompt é essa func que pega)
-        function getInput(message, type = 'number') {
-            const value = prompt(`🔢 ${message}`);
-            return value;
-        }
-
-        // Função para validar número positivo
-        function isPositiveNumber(value) {
-            return !isNaN(value) && value > 0;
-        }
-
-        // Função para coletar valores dos postos com validação para > 0
-        async function collectFuelPrices(quantidadePostos) {
-            let somaValores = 0;
-            let menorValor = Infinity;
-            let valoresValidos = 0;
-
-            for (let i = 1; i <= quantidadePostos; i++) {
-                let valorValido = false;
-                let valorPosto;
-                let mensagemErroExibida = false;
-
-                while (!valorValido) {
-                    let valorPostoStr = getInput(`Digite o valor encontrado (em R$) no posto ${i} (maior que 0):`);
-                    if (valorPostoStr === null) return { somaValores: null, menorValor: null, valoresValidos: 0 };
-                    valorPosto = parseFloat(valorPostoStr);
-
-                    if (isPositiveNumber(valorPosto)) {
-                        valorValido = true;
-                        somaValores += valorPosto;
-                        valoresValidos++;
-                        if (valorPosto < menorValor) {
-                            menorValor = valorPosto;
-                        }
-                        writeMessage(`🏪 Posto ${i}: R$ ${valorPosto.toFixed(2)}`, 'info');
-                    } else {
-                        if (!mensagemErroExibida) {
-                            writeMessage(`⚠️ Valor inválido para o posto ${i}. Por favor, insira um número maior que zero.`, 'warning');
-                            mensagemErroExibida = true;
-                        }
-                    }
-                }
-            }
-
-            return { somaValores, menorValor, valoresValidos };
-        }
-
-        // Event listener do botão principal (para capturar o clique e iniciar a análise)
-        document.getElementById('startButton').addEventListener('click', async () => {
-            // Limpa resultados anteriores
-            document.getElementById('resultContent').innerHTML = '';
-            document.getElementById('output').classList.add('hidden');
-            updateEfficiencyGauge(0); // Reseta o medidor de eficiência
-            
-            showLoading();
-            
-            // Simula processamento (apenas para efeito visual)
-            await new Promise(resolve => setTimeout(resolve, 1500));
-            
-            hideLoading(); 
-
-            // (primeira questão) Solicita a distância percorrida
-            let distanciaPercorrida;
-            while (true) {
-                let distanciaPercorridaStr = getInput("Qual a distância percorrida da sua casa até seu trabalho (em km)?");
-                if (distanciaPercorridaStr === null) return;
-                distanciaPercorrida = parseFloat(distanciaPercorridaStr);
-
-                if (!isPositiveNumber(distanciaPercorrida)) {
-                    showResults();
-                    writeMessage("A distância percorrida inserida não é um número válido ou é menor ou igual a zero. Por favor, insira um número positivo.", 'error');
-                } else {
-                    break;
-                }
-            }
-
-            //(segunda questão) Solicita o consumo médio em km/L
-            let consumoMedio;
-            while (true) {
-                let consumoMedioStr = getInput("Qual o consumo médio do seu veículo (em Km/L)?");
-                if (consumoMedioStr === null) return;
-                consumoMedio = parseFloat(consumoMedioStr);
-
-                if (!isPositiveNumber(consumoMedio)) {
-                    // Apenas pede novamente sem exibir mensagem de erro
-                } else {
-                    break;
-                }
-            }
-
-            // (terceira questão) Calcula o consumo necessário
-            let consumoNecessarioLitros = distanciaPercorrida / consumoMedio;
-
-            updateEfficiencyGauge(consumoMedio); // Atualiza o indicador de eficiência
-            showResults();
-            writeMessage(`🚗 Distância analisada: ${distanciaPercorrida} km | Eficiência: ${consumoMedio} km/L`, 'info'); 
-            writeMessage(`⛽ Consumo necessário: ${consumoNecessarioLitros.toFixed(2)} litros`, 'success');
-
-            // Solicita quantidade de postos
-            let quantidadePostos;
-            while (true) {
-                let quantidadePostosStr = getInput("Em quantos postos você pesquisou preços?");
-                if (quantidadePostosStr === null) return;
-                quantidadePostos = parseInt(quantidadePostosStr);
-
-                if (isNaN(quantidadePostos) || !Number.isInteger(quantidadePostos) || quantidadePostos <= 0) {
-                    // Apenas pede novamente sem exibir mensagem de erro
-                } else {
-                    break; //odeio fazer isso
-                }
-            }
-
-            // Coleta valores dos postos com validação para > 0
-            const { somaValores, menorValor, valoresValidos } = await collectFuelPrices(quantidadePostos);
-            if (somaValores === null) return;
-
+        if (valoresValidos > 0) {
+            let mediaValoresPesquisados = somaValores / valoresValidos;
+            writeMessage(`📊 Média dos valores pesquisados: R$ ${mediaValoresPesquisados.toFixed(2)}`, 'success');
+            writeMessage(`💰 Melhor preço encontrado: R$ ${menorValor.toFixed(2)}`, 'success');
             addSeparator();
 
-            // Calcula e apresenta resultados
-            if (valoresValidos > 0) {
-                let mediaValoresPesquisados = somaValores / valoresValidos;
-                writeMessage(`📊 Média dos valores pesquisados: R$ ${mediaValoresPesquisados.toFixed(2)}`, 'success');
-                writeMessage(`💰 Melhor preço encontrado: R$ ${menorValor.toFixed(2)}`, 'success');
-                
-                addSeparator();
-                
-                // Calcula gasto diário
-                let gastoDiario = 2 * (consumoNecessarioLitros * menorValor);
-                writeMessage(`🔄 Gasto diário (ida e volta): R$ ${gastoDiario.toFixed(2)}`, 'success');
-                
-                // Cálculos extras
-                let gastoSemanal = gastoDiario * 5;
-                let gastoMensal = gastoDiario * 22; // dias úteis
-                
-                writeMessage(`📅 Projeção semanal: R$ ${gastoSemanal.toFixed(2)}`, 'info');
-                writeMessage(`📆 Projeção mensal: R$ ${gastoMensal.toFixed(2)}`, 'info');
-                
-                // Economia potencial
-                let economiaMaxima = 2 * (consumoNecessarioLitros * (mediaValoresPesquisados - menorValor));
-                if (economiaMaxima > 0) {
-                    writeMessage(`💡 Economia diária escolhendo o melhor posto: R$ ${economiaMaxima.toFixed(2)}`, 'success');
-                }
-            } else {
-                writeMessage("Não foi possível calcular os valores pois não foram inseridos dados válidos.", 'error');
+            // Gasto diário ida e volta
+            let gastoDiario = 2 * (consumoNecessarioLitros * menorValor);
+            writeMessage(`🔄 Gasto diário (ida e volta): R$ ${gastoDiario.toFixed(2)}`, 'success');
+
+            // Projeções semanais e mensais
+            let gastoSemanal = gastoDiario * 5;
+            let gastoMensal = gastoDiario * 22;
+            writeMessage(`📅 Projeção semanal: R$ ${gastoSemanal.toFixed(2)}`, 'info');
+            writeMessage(`📆 Projeção mensal: R$ ${gastoMensal.toFixed(2)}`, 'info');
+
+            // Economia potencial
+            let economiaMaxima = 2 * (consumoNecessarioLitros * (mediaValoresPesquisados - menorValor));
+            if (economiaMaxima > 0) {
+                writeMessage(`💡 Economia diária escolhendo o melhor posto: R$ ${economiaMaxima.toFixed(2)}`, 'success');
             }
-        });
-
-        // Efeito de partículas no fundo (segundo plano e será melhorado futuramente)
-        function createParticle() {
-            const particle = document.createElement('div');
-            particle.style.cssText = `
-                position: absolute;
-                width: 2px;
-                height: 2px;
-                background: #00a2ff;
-                border-radius: 50%;
-                pointer-events: none;
-                opacity: 0.6;
-                left: ${Math.random() * 100}vw;
-                top: 100vh;
-                animation: particleFloat ${3 + Math.random() * 4}s linear forwards;
-            `;
-            
-            document.body.appendChild(particle);
-            
-            setTimeout(() => {
-                particle.remove();
-            }, 7000);
+        } else {
+            writeMessage("Não foi possível calcular os valores pois não foram inseridos dados válidos.", 'error');
         }
+    }
 
-        // Adiciona estilo da animação das partículas (que tambem sera melhorado futuramente)
+    // =========================
+    // MÓDULO: Efeito Visual de Partículas
+    // =========================
+
+    /**
+     * Cria uma partícula animada no fundo da tela.
+     */
+    function createParticle() {
+        const particle = document.createElement('div');
+        particle.style.cssText = `
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #00a2ff;
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0.6;
+            left: ${Math.random() * 100}vw;
+            top: 100vh;
+            animation: particleFloat ${3 + Math.random() * 4}s linear forwards;
+        `;
+        document.body.appendChild(particle);
+        setTimeout(() => { particle.remove(); }, 7000);
+    }
+
+    /**
+     * Adiciona o estilo da animação das partículas e inicia o efeito.
+     */
+    function setupParticleAnimation() {
         const style = document.createElement('style');
         style.textContent = `
             @keyframes particleFloat {
@@ -836,9 +828,52 @@
             }
         `;
         document.head.appendChild(style);
-
-        // Cria partículas periodicamente
         setInterval(createParticle, 600);
-    </script>
-</body>
-</html>
+    }
+
+    // =========================
+    // MÓDULO: Fluxo Principal
+    // =========================
+
+    /**
+     * Inicia o fluxo principal da aplicação ao clicar no botão.
+     */
+    async function iniciarAnalise() {
+        // Limpa resultados anteriores e reseta gauge
+        document.getElementById('resultContent').innerHTML = '';
+        document.getElementById('output').classList.add('hidden');
+        updateEfficiencyGauge(0);
+
+        showLoading();
+        // Simula processamento visual
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        hideLoading();
+
+        // Solicita distância percorrida
+        let distanciaPercorrida = await getPositiveNumber("Qual a distância percorrida da sua casa até seu trabalho (em km)?");
+        if (distanciaPercorrida === null) return;
+
+        // Solicita consumo médio
+        let consumoMedio = await getPositiveNumber("Qual o consumo médio do seu veículo (em Km/L)?");
+        if (consumoMedio === null) return;
+
+        // Solicita quantidade de postos pesquisados
+        let quantidadePostos = await getPositiveInteger("Em quantos postos você pesquisou preços?");
+        if (quantidadePostos === null) return;
+
+        // Calcula e exibe resultados
+        await calcularResultados(distanciaPercorrida, consumoMedio, quantidadePostos);
+    }
+
+    // =========================
+    // INICIALIZAÇÃO
+    // =========================
+
+    // Adiciona o evento ao botão principal
+    document.getElementById('startButton').addEventListener('click', iniciarAnalise);
+
+    // Inicia o efeito de partículas no fundo
+    setupParticleAnimation();
+
+</script>
+<!-- ...restante do HTML... -->
