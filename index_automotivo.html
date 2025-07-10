@@ -428,10 +428,6 @@
             border-left: 4px solid #fbbf24;
         }
 
-        .message.error {
-            background: rgba(239, 68, 68, 0.1);
-            border-left: 4px solid #ef4444;
-        }
 
         /* Separador */
         .separator {
@@ -484,10 +480,10 @@
         }
 
         /* Efeitos de hover para interatividade */
-        .main-card:hover {
+        /* .main-card:hover {
             transform: translateY(-2px);
             transition: transform 0.3s ease;
-        }
+        } */
 
         /* Animação de entrada */
         .main-card {
@@ -588,7 +584,7 @@
         switch(type) {
             case 'success': icon = '✅'; break;
             case 'warning': icon = '⚠️'; break;
-            case 'error': icon = '❌'; break;
+            // case 'error': icon = '❌'; break;
             default: icon = 'ℹ️';
         }
         div.className = `message ${type}`;
@@ -688,7 +684,7 @@
             if (valueStr === null) return null;
             let value = parseFloat(valueStr);
             if (isPositiveNumber(value)) return value;
-            // Não exibe mensagem de erro, apenas repete
+            // Não exibe mais a mensagem de erro, apenas repete
         }
     }
 
@@ -876,4 +872,3 @@
     setupParticleAnimation();
 
 </script>
-<!-- ...restante do HTML... -->
