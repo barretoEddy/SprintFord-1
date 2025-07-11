@@ -132,20 +132,14 @@
             justify-content: center;
             width: 120px;
             height: 60px;
-            background: linear-gradient(145deg, #003d82, #00a2ff);
-            border-radius: 50px;
             margin-bottom: 1rem;
             position: relative;
-            box-shadow: 0 8px 20px rgba(0, 162, 255, 0.3);
         }
 
-        .ford-logo::after {
-            content: 'FORD';
-            font-family: 'Orbitron', monospace;
-            font-weight: 900;
-            font-size: 1.2rem;
-            color: white;
-            letter-spacing: 2px;
+        .ford-logo svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 8px 20px rgba(0, 162, 255, 0.3));
         }
 
         .title {
@@ -263,12 +257,160 @@
             justify-content: center;
         }
 
+        /* Container de inputs com animação de carrossel */
+        .input-container {
+            margin: 1.5rem 0;
+            position: relative;
+            overflow: hidden;
+            min-height: 200px; /* Altura mínima em vez de fixa */
+        }
+
+        .input-step {
+            position: absolute;
+            width: 100%;
+            top: 0;
+            left: 0;
+            transform: translateX(100%); /* Inicia da direita */
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Animação de alta velocidade */
+            z-index: 1;
+        }
+
+        .input-step.active {
+            position: relative; /* Volta para relative quando ativo */
+            transform: translateX(0);
+            opacity: 1;
+            z-index: 2;
+        }
+
+        .input-step.prev {
+            transform: translateX(-100%); /* Sai pela esquerda */
+            opacity: 0;
+            z-index: 0;
+        }
+
+        /* Estilo dos inputs automotivos */
+        .automotive-input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            background: linear-gradient(145deg, #333, #2a2a2a);
+            border: 2px solid #444;
+            border-radius: 12px;
+            color: #ffffff;
+            font-family: 'Roboto', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .automotive-input:focus {
+            outline: none;
+            border-color: #00a2ff;
+            box-shadow: 
+                inset 0 2px 5px rgba(0, 0, 0, 0.3),
+                0 0 15px rgba(0, 162, 255, 0.3);
+            background: linear-gradient(145deg, #3a3a3a, #2f2f2f);
+        }
+
+        .automotive-input::placeholder {
+            color: #888;
+            font-style: italic;
+        }
+
+        /* Label dos inputs */
+        .input-label {
+            display: block;
+            color: #00a2ff;
+            font-family: 'Orbitron', monospace;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Botões de navegação */
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .nav-button {
+            flex: 1;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Orbitron', monospace;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-button.primary {
+            background: linear-gradient(145deg, #00a2ff, #0080cc);
+            color: white;
+        }
+
+        .nav-button.primary:hover {
+            background: linear-gradient(145deg, #0080cc, #006bb3);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 162, 255, 0.3);
+        }
+
+        .nav-button.secondary {
+            background: linear-gradient(145deg, #666, #555);
+            color: white;
+        }
+
+        .nav-button.secondary:hover {
+            background: linear-gradient(145deg, #777, #666);
+            transform: translateY(-2px);
+        }
+
+        .nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Indicador de progresso */
+        .progress-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #444;
+            transition: all 0.3s ease;
+        }
+
+        .progress-dot.active {
+            background: #00a2ff;
+            box-shadow: 0 0 10px rgba(0, 162, 255, 0.5);
+        }
+
+        .progress-dot.completed {
+            background: #22c55e;
+        }
+
         /* Animação de loading automotiva */
         .loading-container {
             text-align: center;
             padding: 2rem 0;
         }
-        /* Animação do orojeto de pista */
+
+        /* Animação do projeto de pista */
         .racing-track {
             position: absolute;
             bottom: 0;
@@ -287,7 +429,7 @@
             z-index: 2;
             pointer-events: none;
         }
-        /* Animação do orojeto de pista */
+
         @keyframes trackMove {
             from { transform: translateX(0); }
             to { transform: translateX(40px); }
@@ -370,12 +512,14 @@
             overflow: hidden;
             margin: 0.5rem 0;
         }
+
         .fuel-level {
             height: 100%;
             background: linear-gradient(90deg, #ff4444, #ffaa00, #44ff44);
-            width: 0%; /* Inicia em 0 e é atualizado via JS, mas somente em multiplos de 25%*/
+            width: 0%;
             transition: width 0.8s ease-out;
         }
+
         .efficiency-text {
             font-size: 0.8rem;
             color: #555;
@@ -383,7 +527,7 @@
             margin-top: 4px;
             font-weight: 500;
         }
- 
+
         /* Mensagens de resultado */
         .message {
             display: flex;
@@ -394,7 +538,7 @@
             margin-bottom: 0.5rem;
             animation: fadeIn 0.3s ease-in;
         }
-        /* animação do botão~ */
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateX(-10px); }
             to { opacity: 1; transform: translateX(0); }
@@ -428,6 +572,10 @@
             border-left: 4px solid #fbbf24;
         }
 
+        .message.error {
+            background: rgba(239, 68, 68, 0.1);
+            border-left: 4px solid #ef4444;
+        }
 
         /* Separador */
         .separator {
@@ -451,6 +599,21 @@
         /* Classes utilitárias */
         .hidden {
             display: none !important;
+        }
+
+        /* Validação visual */
+        .automotive-input.invalid {
+            border-color: #ef4444;
+            box-shadow: 
+                inset 0 2px 5px rgba(0, 0, 0, 0.3),
+                0 0 15px rgba(239, 68, 68, 0.3);
+        }
+
+        .error-message {
+            color: #ef4444;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+            font-weight: 500;
         }
 
         /* Responsividade */
@@ -477,13 +640,17 @@
                 width: 60px;
                 height: 60px;
             }
+
+            .nav-buttons {
+                flex-direction: column;
+            }
         }
 
         /* Efeitos de hover para interatividade */
-        /* .main-card:hover {
+        .main-card:hover {
             transform: translateY(-2px);
             transition: transform 0.3s ease;
-        } */
+        }
 
         /* Animação de entrada */
         .main-card {
@@ -509,24 +676,111 @@
         <div class="gear-icon gear-2">⚙</div>
         <div class="gear-icon gear-3">⚙</div>
     </div>
-    <!-- Pista automotiva (apenas o detalhe da pista kkkk)-->
+    <!-- Pista automotiva -->
     <div class="racing-track"></div> 
 
     <div class="main-card">
         <!-- Header -->
         <div class="header">
-            <div class="ford-logo"></div>
+            <div class="ford-logo">
+                <svg viewBox="0 0 342 142" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="fordGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#003d82;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#00a2ff;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <ellipse cx="171" cy="71" rx="171" ry="71" fill="url(#fordGradient)"/>
+                    <path d="M171 14c-31.4 0-57 25.6-57 57s25.6 57 57 57 57-25.6 57-57-25.6-57-57-57zm0 100c-23.7 0-43-19.3-43-43s19.3-43 43-43 43 19.3 43 43-19.3 43-43 43z" fill="white"/>
+                    <text x="171" y="80" font-family="Arial, sans-serif" font-size="32" font-weight="bold" text-anchor="middle" fill="white">FORD</text>
+                </svg>
+            </div>
             <h1 class="title">Calculadora de Combustível</h1>
             <p class="subtitle">Sistema Inteligente de Análise de Consumo</p>
             <div class="speedometer"></div>
         </div>
 
+        <!-- Indicador de progresso -->
+        <div id="progressIndicator" class="progress-indicator hidden">
+            <div class="progress-dot" data-step="0"></div>
+            <div class="progress-dot" data-step="1"></div>
+            <div class="progress-dot" data-step="2"></div>
+            <div class="progress-dot" data-step="3"></div>
+        </div>
+
         <!-- Botão principal -->
         <button id="startButton" class="start-button">
-            <span class="button-icon"><svg xmlns="http://www.w3.org/2000/svg" width="76" height="76" viewBox="0 0 24 24">
-                <path fill="currentColor" fill-rule="evenodd" d="M12.003 8.157C6.475 8.157 2 9.881 2 12.003c0 2.123 4.475 3.84 10.003 3.84S22 14.126 22 12.003s-4.475-3.846-9.997-3.846m0 7.29c-5.3 0-9.61-1.533-9.61-3.444c0-1.91 4.306-3.457 9.61-3.457s9.617 1.553 9.617 3.457c0 1.905-4.3 3.445-9.617 3.445M16 11.824c-.228-.025-.511.17-.741.459c-.116.145-.24.42-.259.582c-.025.164.019.329.078.373c.06.047.314.183.716-.228a3.5 3.5 0 0 0 .446-.604l-.072-.019c.137-.256.109-.531-.168-.563m-3.996-2.992c-5.148 0-9.305 1.42-9.305 3.17c0 1.748 4.16 3.178 9.305 3.178s9.315-1.423 9.315-3.179s-4.173-3.17-9.315-3.17m-4.347 4.852c-.561 0-1.06-.373-1.072-1.04c-.006-.406.315-.905.916-1.054c.071 0 .096.025.096.066c0 .026-.025.057-.084.086c-.174.066-.476.414-.476.734c0 .243.15.512.402.569c.068.019.133.013.199.013c.626 0 1.33-.715 2.09-1.803c-.122.006-.645.066-.776.215c-.06.047-.096.019-.109-.032c0-.012.019-.06.04-.085c.206-.237.826-.288.975-.307c.555-.867 1.265-1.417 1.458-1.458q-.006 0-.016-.003c-.495-.117-.947-.215-1.301-.215c-1.246 0-1.8.544-1.776 1.04c.013.203.175.335.411.288c.259-.047.62-.294.71-.512c.02-.045.072-.054.09-.038c.038.031.026.079.026.079c-.031.256-.42.961-1.09.961c-.374 0-.626-.354-.62-.702c.006-.648.657-1.303 2.264-1.303c.302 0 .645.025 1.018.092c.433.079 1.51.262 2.386.275c.324 0 .735.013 1.071-.038c.355-.06.277-.073.418-.073c.127 0 .127.054.127.105c0 .208-.722.61-1.336.61c-.903 0-1.84-.414-2.326-.55a.07.07 0 0 1 .015.085a.7.7 0 0 1-.096.104c-.128.117-.567.409-1.046 1.225c.386-.02.837-.098.837-.098s-.025-.086-.025-.159c.02-.281.181-.452.387-.42a.23.23 0 0 1 .193.224a.6.6 0 0 1-.168.354c-.06.045-.122.092-.2.13c0 .073.097.13.18.14c-.018.072-.012.104-.043.097c-.193 0-.27-.19-.27-.19c-.26.048-.508.08-1.02.13c-1.282 2.11-1.684 2.458-2.469 2.458zm8.844-.348c.277-.013.788-.55.91-.68c.024-.032.071-.092.096-.092s.078.025.078.067c0 .025-.06.123-.103.183c-.258.329-.685.832-1.168.845c-.24 0-.33-.098-.361-.288c-.109.098-.483.269-.866.269a.52.52 0 0 1-.507-.348a.75.75 0 0 1-.038-.49c-.174.091-.336.104-.567.098c-.27-.007-.439-.13-.523-.453c-.311.576-.324.595-.638 1.199h-.548l.704-1.211a1.6 1.6 0 0 0 .168-.434c.018-.079-.038-.152-.122-.158c-.09 0-.236.092-.38.228c0 0-.361.392-.626.79c-.252.38-.685.813-1.155.813c-.343 0-.651-.19-.716-.556c0 0-.035.085-.337.262c-.025.013-.09.05-.109.038a.28.28 0 0 1-.096-.164c.018.006.059-.026.18-.124c.24-.183.29-.329.29-.329c.06-.123.162-.319.234-.458c.193-.392.529-.794 1.077-.813c.09 0 .115.038.134.073c.053.038.034.117.034.117a1.23 1.23 0 0 0-.812.512c-.097.146-.2.38-.219.55c-.037.295.097.49.296.538c.374.06.685-.215.928-.642c.063-.11.11-.398.11-.557a.62.62 0 0 0-.15-.385c0-.111.072-.184.156-.184c.025 0 .05 0 .078.025c.127.13.199.38.199.57c0 .066 0 .13-.013.196c.271-.335.614-.766.879-.851c.053-.025.102-.025.155-.025c.483-.013.418.433.418.433c.258-.3.439-.411.675-.398c.259.012.35.196.35.341c-.007.17-.132.367-.343.373c-.187 0-.296-.091-.355-.262c-.122.044-.181.13-.206.3a.324.324 0 0 0 .33.386c.355 0 .51-.158.639-.275c.439-.42.685-.857 1.317-.85c.38.005.476.312.542.445l.831-1.426h.511l-1.38 2.483c-.025.053-.09.151-.084.227c.013.124.169.092.11.092zm-5.089-2.533c.038-.038.103-.159.09-.238c-.005-.038-.024-.085-.07-.079c-.097.02-.157.067-.181.165a.42.42 0 0 0 0 .256s.062.006.161-.104" clip-rule="evenodd"/>
-              </svg> Iniciar Análise</span>
+            <span class="button-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <path fill="currentColor" fill-rule="evenodd" d="M12.003 8.157C6.475 8.157 2 9.881 2 12.003c0 2.123 4.475 3.84 10.003 3.84S22 14.126 22 12.003s-4.475-3.846-9.997-3.846m0 7.29c-5.3 0-9.61-1.533-9.61-3.444c0-1.91 4.306-3.457 9.61-3.457s9.617 1.553 9.617 3.457c0 1.905-4.3 3.445-9.617 3.445M16 11.824c-.228-.025-.511.17-.741.459c-.116.145-.24.42-.259.582c-.025.164.019.329.078.373c.06.047.314.183.716-.228a3.5 3.5 0 0 0 .446-.604l-.072-.019c.137-.256.109-.531-.168-.563m-3.996-2.992c-5.148 0-9.305 1.42-9.305 3.17c0 1.748 4.16 3.178 9.305 3.178s9.315-1.423 9.315-3.179s-4.173-3.17-9.315-3.17m-4.347 4.852c-.561 0-1.06-.373-1.072-1.04c-.006-.406.315-.905.916-1.054c.071 0 .096.025.096.066c0 .026-.025.057-.084.086c-.174.066-.476.414-.476.734c0 .243.15.512.402.569c.068.019.133.013.199.013c.626 0 1.33-.715 2.09-1.803c-.122.006-.645.066-.776.215c-.06.047-.096.019-.109-.032c0-.012.019-.06.04-.085c.206-.237.826-.288.975-.307c.555-.867 1.265-1.417 1.458-1.458q-.006 0-.016-.003c-.495-.117-.947-.215-1.301-.215c-1.246 0-1.8.544-1.776 1.04c.013.203.175.335.411.288c.259-.047.62-.294.71-.512c.02-.045.072-.054.09-.038c.038.031.026.079.026.079c-.031.256-.42.961-1.09.961c-.374 0-.626-.354-.62-.702c.006-.648.657-1.303 2.264-1.303c.302 0 .645.025 1.018.092c.433.079 1.51.262 2.386.275c.324 0 .735.013 1.071-.038c.355-.06.277-.073.418-.073c.127 0 .127.054.127.105c0 .208-.722.61-1.336.61c-.903 0-1.84-.414-2.326-.55a.07.07 0 0 1 .015.085a.7.7 0 0 1-.096.104c-.128.117-.567.409-1.046 1.225c.386-.02.837-.098.837-.098s-.025-.086-.025-.159c.02-.281.181-.452.387-.42a.23.23 0 0 1 .193.224a.6.6 0 0 1-.168.354c-.06.045-.122.092-.2.13c0 .073.097.13.18.14c-.018.072-.012.104-.043.097c-.193 0-.27-.19-.27-.19c-.26.048-.508.08-1.02.13c-1.282 2.11-1.684 2.458-2.469 2.458zm8.844-.348c.277-.013.788-.55.91-.68c.024-.032.071-.092.096-.092s.078.025.078.067c0 .025-.06.123-.103.183c-.258.329-.685.832-1.168.845c-.24 0-.33-.098-.361-.288c-.109.098-.483.269-.866.269a.52.52 0 0 1-.507-.348a.75.75 0 0 1-.038-.49c-.174.091-.336.104-.567.098c-.27-.007-.439-.13-.523-.453c-.311.576-.324.595-.638 1.199h-.548l.704-1.211a1.6 1.6 0 0 0 .168-.434c.018-.079-.038-.152-.122-.158c-.09 0-.236.092-.38.228c0 0-.361.392-.626.79c-.252.38-.685.813-1.155.813c-.343 0-.651-.19-.716-.556c0 0-.035.085-.337.262c-.025.013-.09.05-.109.038a.28.28 0 0 1-.096-.164c.018.006.059-.026.18-.124c.24-.183.29-.329.29-.329c.06-.123.162-.319.234-.458c.193-.392.529-.794 1.077-.813c.09 0 .115.038.134.073c.053.038.034.117.034.117a1.23 1.23 0 0 0-.812.512c-.097.146-.2.38-.219.55c-.037.295.097.49.296.538c.374.06.685-.215.928-.642c.063-.11.11-.398.11-.557a.62.62 0 0 0-.15-.385c0-.111.072-.184.156-.184c.025 0 .05 0 .078.025c.127.13.199.38.199.57c0 .066 0 .13-.013.196c.271-.335.614-.766.879-.851c.053-.025.102-.025.155-.025c.483-.013.418.433.418.433c.258-.3.439-.411.675-.398c.259.012.35.196.35.341c-.007.17-.132.367-.343.373c-.187 0-.296-.091-.355-.262c-.122.044-.181.13-.206.3a.324.324 0 0 0 .33.386c.355 0 .51-.158.639-.275c.439-.42.685-.857 1.317-.85c.38.005.476.312.542.445l.831-1.426h.511l-1.38 2.483c-.025.053-.09.151-.084.227c.013.124.169.092.11.092zm-5.089-2.533c.038-.038.103-.159.09-.238c-.005-.038-.024-.085-.07-.079c-.097.02-.157.067-.181.165a.42.42 0 0 0 0 .256s.062.006.161-.104" clip-rule="evenodd"/>
+                </svg>
+            </span>
+            Iniciar Análise
         </button>
+
+        <!-- Container de inputs sequenciais -->
+        <div id="inputContainer" class="input-container hidden">
+            <!-- Step 1: Distância -->
+            <div class="input-step" data-step="0">
+                <label class="input-label">🚗 Distância Percorrida</label>
+                <input type="number" 
+                       id="distanciaInput" 
+                       class="automotive-input" 
+                       placeholder="Digite a distância em km (ex: 25.5)"
+                       min="0.1" 
+                       step="0.1">
+                <div id="distanciaError" class="error-message hidden"></div>
+                <div class="nav-buttons">
+                    <button class="nav-button secondary" onclick="cancelarAnalise()">Cancelar</button>
+                    <button class="nav-button primary" onclick="proximoStep(0)">Próximo</button>
+                </div>
+            </div>
+
+            <!-- Step 2: Consumo -->
+            <div class="input-step" data-step="1">
+                <label class="input-label">⛽ Consumo do Veículo</label>
+                <input type="number" 
+                       id="consumoInput" 
+                       class="automotive-input" 
+                       placeholder="Digite o consumo em km/L (ex: 12.5)"
+                       min="0.1" 
+                       step="0.1">
+                <div id="consumoError" class="error-message hidden"></div>
+                <div class="nav-buttons">
+                    <button class="nav-button secondary" onclick="stepAnterior(1)">Anterior</button>
+                    <button class="nav-button primary" onclick="proximoStep(1)">Próximo</button>
+                </div>
+            </div>
+
+            <!-- Step 3: Quantidade de postos -->
+            <div class="input-step" data-step="2">
+                <label class="input-label">🏪 Quantidade de Postos</label>
+                <input type="number" 
+                       id="postosInput" 
+                       class="automotive-input" 
+                       placeholder="Quantos postos você pesquisou? (ex: 3)"
+                       min="1" 
+                       step="1">
+                <div id="postosError" class="error-message hidden"></div>
+                <div class="nav-buttons">
+                    <button class="nav-button secondary" onclick="stepAnterior(2)">Anterior</button>
+                    <button class="nav-button primary" onclick="proximoStep(2)">Próximo</button>
+                </div>
+            </div>
+
+            <!-- Step 4: Preços dos postos -->
+            <div class="input-step" data-step="3">
+                <label class="input-label">💰 Preços dos Postos</label>
+                <div id="precosContainer">
+                    <!-- Inputs de preços serão gerados dinamicamente -->
+                </div>
+                <div id="precosError" class="error-message hidden"></div>
+                <div class="nav-buttons">
+                    <button class="nav-button secondary" onclick="stepAnterior(3)">Anterior</button>
+                    <button class="nav-button primary" onclick="finalizarAnalise()">Calcular</button>
+                </div>
+            </div>
+        </div>
 
         <!-- Animação de loading -->
         <div id="loadingAnimation" class="loading-container hidden">
@@ -566,309 +820,613 @@
             </p>
         </div>
     </div>
-<!-- Aqui começa o JavaScript -->
-<script>
-    // =========================
-    // MÓDULO: Interface de Usuário
-    // =========================
 
-    /**
-     * Exibe uma mensagem formatada na área de resultados.
-     * @param {string} message - Texto da mensagem.
-     * @param {string} type - Tipo ('info', 'success', 'warning', 'error').
-     */
-    function writeMessage(message, type = 'info') {
-        const resultContent = document.getElementById('resultContent');
-        const div = document.createElement('div');
-        let icon = '';
-        switch(type) {
-            case 'success': icon = '✅'; break;
-            case 'warning': icon = '⚠️'; break;
-            // case 'error': icon = '❌'; break;
-            default: icon = 'ℹ️';
-        }
-        div.className = `message ${type}`;
-        div.innerHTML = `<div class="message-icon">${icon}</div><p class="message-text">${message}</p>`;
-        resultContent.appendChild(div);
-    }
+    <!-- JavaScript -->
+    <script>
+        // =========================
+        // MÓDULO: Estado da Aplicação
+        // =========================
 
-    /**
-     * Adiciona um separador visual na área de resultados.
-     */
-    function addSeparator() {
-        const resultContent = document.getElementById('resultContent');
-        const separator = document.createElement('div');
-        separator.className = 'separator';
-        resultContent.appendChild(separator);
-    }
+        let currentStep = 0;
+        let formData = {
+            distancia: 0,
+            consumo: 0,
+            quantidadePostos: 0,
+            precos: []
+        };
 
-    /**
-     * Atualiza o indicador de eficiência do veículo.
-     * @param {number} consumoMedio - Consumo médio em km/L.
-     */
-    function updateEfficiencyGauge(consumoMedio) {
-        const fuelLevel = document.getElementById('fuelLevel');
-        const efficiencyText = document.getElementById('efficiencyText');
-        const indicator = document.getElementById('efficiencyIndicator');
-        if (consumoMedio <= 0) {
-            indicator.classList.add('hidden');
-            fuelLevel.style.width = '0%';
-            return;
-        }
-        indicator.classList.remove('hidden');
-        let efficiencyPercentage = 0;
-        if (consumoMedio < 10) efficiencyPercentage = 25;
-        else if (consumoMedio < 15) efficiencyPercentage = 50;
-        else if (consumoMedio < 20) efficiencyPercentage = 80;
-        else efficiencyPercentage = 100;
-        fuelLevel.style.width = `${efficiencyPercentage}%`;
-        efficiencyText.textContent = `Nível de Eficiência do Veículo: ${efficiencyPercentage}%`;
-    }
+        // =========================
+        // MÓDULO: Interface de Usuário
+        // =========================
 
-    /**
-     * Exibe a animação de carregamento e desabilita o botão.
-     */
-    function showLoading() {
-        document.getElementById('loadingAnimation').classList.remove('hidden');
-        document.getElementById('startButton').disabled = true;
-    }
-
-    /**
-     * Oculta a animação de carregamento e habilita o botão.
-     */
-    function hideLoading() {
-        document.getElementById('loadingAnimation').classList.add('hidden');
-        document.getElementById('startButton').disabled = false;
-    }
-
-    /**
-     * Exibe a área de resultados e faz scroll até ela.
-     */
-    function showResults() {
-        document.getElementById('output').classList.remove('hidden');
-        setTimeout(() => {
-            document.getElementById('output').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }, 300);
-    }
-
-    // =========================
-    // MÓDULO: Entrada e Validação
-    // =========================
-
-    /**
-     * Solicita um valor ao usuário via prompt.
-     * @param {string} message - Mensagem do prompt.
-     * @returns {string|null} Valor digitado ou null se cancelado.
-     */
-    function getInput(message) {
-        return prompt(`🔢 ${message}`);
-    }
-
-    /**
-     * Verifica se o valor é um número positivo.
-     * @param {any} value - Valor a ser testado.
-     * @returns {boolean}
-     */
-    function isPositiveNumber(value) {
-        return !isNaN(value) && value > 0;
-    }
-
-    /**
-     * Solicita e valida um número positivo do usuário.
-     * @param {string} promptMsg - Mensagem do prompt.
-     * @returns {number|null} Valor válido ou null se cancelado.
-     */
-    async function getPositiveNumber(promptMsg) {
-        while (true) {
-            let valueStr = getInput(promptMsg);
-            if (valueStr === null) return null;
-            let value = parseFloat(valueStr);
-            if (isPositiveNumber(value)) return value;
-            // Não exibe mais a mensagem de erro, apenas repete
-        }
-    }
-
-    /**
-     * Solicita e valida um número inteiro positivo do usuário.
-     * @param {string} promptMsg - Mensagem do prompt.
-     * @returns {number|null} Valor válido ou null se cancelado.
-     */
-    async function getPositiveInteger(promptMsg) {
-        while (true) {
-            let valueStr = getInput(promptMsg);
-            if (valueStr === null) return null;
-            let value = parseInt(valueStr);
-            if (!isNaN(value) && Number.isInteger(value) && value > 0) return value;
-            // Não exibe mensagem de erro, apenas repete
-        }
-    }
-
-    // =========================
-    // MÓDULO: Coleta e Cálculo de Preços
-    // =========================
-
-    /**
-     * Solicita ao usuário os preços dos postos e retorna estatísticas.
-     * Cancela toda a análise se algum valor for cancelado.
-     * @param {number} quantidadePostos - Quantidade de postos a pesquisar.
-     * @returns {Promise<{somaValores:number, menorValor:number, valoresValidos:number}|null>}
-     */
-    async function collectFuelPrices(quantidadePostos) {
-        let somaValores = 0;
-        let menorValor = Infinity;
-        let valoresValidos = 0;
-        for (let i = 1; i <= quantidadePostos; i++) {
-            let valor = await getPositiveNumber(`Digite o valor encontrado (em R$) no posto ${i} (maior que 0):`);
-            if (valor === null) {
-                // UX: Cancela toda a análise e retorna null
-                return null;
+        /**
+         * Exibe uma mensagem formatada na área de resultados.
+         * @param {string} message - Texto da mensagem.
+         * @param {string} type - Tipo ('info', 'success', 'warning', 'error').
+         */
+        function writeMessage(message, type = 'info') {
+            const resultContent = document.getElementById('resultContent');
+            const div = document.createElement('div');
+            let icon = '';
+            switch(type) {
+                case 'success': icon = '✅'; break;
+                case 'warning': icon = '⚠️'; break;
+                case 'error': icon = '❌'; break;
+                default: icon = 'ℹ️';
             }
-            somaValores += valor;
-            valoresValidos++;
-            if (valor < menorValor) menorValor = valor;
-            writeMessage(`🏪 Posto ${i}: R$ ${valor.toFixed(2)}`, 'info');
+            div.className = `message ${type}`;
+            div.innerHTML = `<div class="message-icon">${icon}</div><p class="message-text">${message}</p>`;
+            resultContent.appendChild(div);
         }
-        return { somaValores, menorValor, valoresValidos };
-    }
 
-    // =========================
-    // MÓDULO: Cálculos de Consumo e Resultados
-    // =========================
-
-    /**
-     * Realiza todos os cálculos e exibe os resultados.
-     * Cancela tudo se algum preço for cancelado.
-     */
-    async function calcularResultados(distanciaPercorrida, consumoMedio, quantidadePostos) {
-        // Consumo necessário para ida
-        let consumoNecessarioLitros = distanciaPercorrida / consumoMedio;
-        updateEfficiencyGauge(consumoMedio);
-        showResults();
-        writeMessage(`🚗 Distância analisada: ${distanciaPercorrida} km | Eficiência: ${consumoMedio} km/L`, 'info');
-        writeMessage(`⛽ Consumo necessário: ${consumoNecessarioLitros.toFixed(2)} litros`, 'success');
-
-        // Coleta preços dos postos
-        const result = await collectFuelPrices(quantidadePostos);
-        if (!result) {
-            // UX: Mensagem clara de cancelamento
-            addSeparator();
-            writeMessage("Operação cancelada pelo usuário. Nenhum resultado foi gerado.", 'warning');
-            return;
+        /**
+         * Adiciona um separador visual na área de resultados.
+         */
+        function addSeparator() {
+            const resultContent = document.getElementById('resultContent');
+            const separator = document.createElement('div');
+            separator.className = 'separator';
+            resultContent.appendChild(separator);
         }
-        const { somaValores, menorValor, valoresValidos } = result;
 
-        addSeparator();
+        /**
+         * Atualiza o indicador de eficiência do veículo.
+         * @param {number} consumoMedio - Consumo médio em km/L.
+         */
+        function updateEfficiencyGauge(consumoMedio) {
+            const fuelLevel = document.getElementById('fuelLevel');
+            const efficiencyText = document.getElementById('efficiencyText');
+            const indicator = document.getElementById('efficiencyIndicator');
+            
+            if (consumoMedio <= 0) {
+                indicator.classList.add('hidden');
+                fuelLevel.style.width = '0%';
+                return;
+            }
+            
+            indicator.classList.remove('hidden');
+            let efficiencyPercentage = 0;
+            if (consumoMedio < 10) efficiencyPercentage = 25;
+            else if (consumoMedio < 15) efficiencyPercentage = 50;
+            else if (consumoMedio < 20) efficiencyPercentage = 75;
+            else efficiencyPercentage = 100;
+            
+            fuelLevel.style.width = `${efficiencyPercentage}%`;
+            efficiencyText.textContent = `Nível de Eficiência do Veículo: ${efficiencyPercentage}%`;
+        }
 
-        if (valoresValidos > 0) {
-            let mediaValoresPesquisados = somaValores / valoresValidos;
-            writeMessage(`📊 Média dos valores pesquisados: R$ ${mediaValoresPesquisados.toFixed(2)}`, 'success');
-            writeMessage(`💰 Melhor preço encontrado: R$ ${menorValor.toFixed(2)}`, 'success');
+        /**
+         * Exibe a animação de carregamento e desabilita controles.
+         */
+        function showLoading() {
+            document.getElementById('loadingAnimation').classList.remove('hidden');
+            document.getElementById('startButton').disabled = true;
+            document.getElementById('inputContainer').classList.add('hidden');
+        }
+
+        /**
+         * Oculta a animação de carregamento e habilita controles.
+         */
+        function hideLoading() {
+            document.getElementById('loadingAnimation').classList.add('hidden');
+            document.getElementById('startButton').disabled = false;
+        }
+
+        /**
+         * Exibe a área de resultados e faz scroll até ela.
+         */
+        function showResults() {
+            document.getElementById('output').classList.remove('hidden');
+            setTimeout(() => {
+                document.getElementById('output').scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'nearest' 
+                });
+            }, 300);
+        }
+
+        // =========================
+        // MÓDULO: Navegação de Steps
+        // =========================
+
+        /**
+         * Atualiza o indicador de progresso.
+         * @param {number} step - Step atual.
+         */
+        function updateProgressIndicator(step) {
+            const dots = document.querySelectorAll('.progress-dot');
+            dots.forEach((dot, index) => {
+                dot.classList.remove('active', 'completed');
+                if (index < step) {
+                    dot.classList.add('completed');
+                } else if (index === step) {
+                    dot.classList.add('active');
+                }
+            });
+        }
+
+        /**
+         * Mostra um step específico com animação de carrossel.
+         * @param {number} stepIndex - Índice do step.
+         * @param {string} direction - Direção da animação ('next' ou 'prev').
+         */
+        function showStep(stepIndex, direction = 'next') {
+            const steps = document.querySelectorAll('.input-step');
+            
+            // Remove todas as classes de todos os steps
+            steps.forEach((step, index) => {
+                step.classList.remove('active', 'prev');
+                
+                if (index === stepIndex) {
+                    // Step que será ativado
+                    step.classList.add('active');
+                } else {
+                    // Steps que não estão ativos
+                    if (index < stepIndex) {
+                        step.classList.add('prev');
+                    }
+                }
+            });
+            
+            // Atualiza indicador de progresso
+            updateProgressIndicator(stepIndex);
+            
+            // Foca no input do step atual após a animação
+            setTimeout(() => {
+                const currentStepElement = steps[stepIndex];
+                const input = currentStepElement.querySelector('input');
+                if (input) {
+                    input.focus();
+                }
+            }, 450); // Aguarda a animação terminar
+        }
+
+        /**
+         * Inicia o processo de entrada de dados.
+         */
+        function iniciarAnalise() {
+            // Limpa dados anteriores
+            formData = {
+                distancia: 0,
+                consumo: 0,
+                quantidadePostos: 0,
+                precos: []
+            };
+            currentStep = 0;
+            
+            // Limpa resultados anteriores
+            document.getElementById('resultContent').innerHTML = '';
+            document.getElementById('output').classList.add('hidden');
+            updateEfficiencyGauge(0);
+            
+            // Mostra container de inputs e indicador de progresso
+            document.getElementById('startButton').classList.add('hidden');
+            document.getElementById('progressIndicator').classList.remove('hidden');
+            document.getElementById('inputContainer').classList.remove('hidden');
+            
+            // Mostra primeiro step
+            showStep(0);
+        }
+
+        /**
+         * Avança para o próximo step.
+         * @param {number} stepIndex - Step atual.
+         */
+        function proximoStep(stepIndex) {
+            if (validateCurrentStep(stepIndex)) {
+                saveCurrentStepData(stepIndex);
+                
+                if (stepIndex === 2) {
+                    // Gera inputs de preços dinamicamente
+                    generatePriceInputs();
+                }
+                
+                currentStep = stepIndex + 1;
+                showStep(currentStep, 'next'); // Entra da direita
+            }
+        }
+
+        /**
+         * Volta para o step anterior.
+         * @param {number} stepIndex - Step atual.
+         */
+        function stepAnterior(stepIndex) {
+            currentStep = stepIndex - 1;
+            showStep(currentStep, 'prev'); // Entra da esquerda
+        }
+
+        /**
+         * Cancela a análise e volta ao estado inicial.
+         */
+        function cancelarAnalise() {
+            document.getElementById('inputContainer').classList.add('hidden');
+            document.getElementById('progressIndicator').classList.add('hidden');
+            document.getElementById('startButton').classList.remove('hidden');
+            document.getElementById('output').classList.add('hidden');
+            
+            // Limpa erros
+            clearAllErrors();
+        }
+
+        // =========================
+        // MÓDULO: Validação
+        // =========================
+
+        /**
+         * Valida o step atual.
+         * @param {number} stepIndex - Índice do step.
+         * @returns {boolean} True se válido.
+         */
+        function validateCurrentStep(stepIndex) {
+            clearStepError(stepIndex);
+            
+            switch(stepIndex) {
+                case 0:
+                    return validateDistancia();
+                case 1:
+                    return validateConsumo();
+                case 2:
+                    return validateQuantidadePostos();
+                case 3:
+                    return validatePrecos();
+                default:
+                    return false;
+            }
+        }
+
+        /**
+         * Valida a distância.
+         * @returns {boolean} True se válida.
+         */
+        function validateDistancia() {
+            const input = document.getElementById('distanciaInput');
+            const value = parseFloat(input.value);
+            
+            if (isNaN(value) || value <= 0) {
+                showStepError(0, 'Por favor, insira uma distância válida maior que 0.');
+                input.classList.add('invalid');
+                return false;
+            }
+            
+            input.classList.remove('invalid');
+            return true;
+        }
+
+        /**
+         * Valida o consumo.
+         * @returns {boolean} True se válido.
+         */
+        function validateConsumo() {
+            const input = document.getElementById('consumoInput');
+            const value = parseFloat(input.value);
+            
+            if (isNaN(value) || value <= 0) {
+                showStepError(1, 'Por favor, insira um consumo válido maior que 0.');
+                input.classList.add('invalid');
+                return false;
+            }
+            
+            input.classList.remove('invalid');
+            return true;
+        }
+
+        /**
+         * Valida a quantidade de postos.
+         * @returns {boolean} True se válida.
+         */
+        function validateQuantidadePostos() {
+            const input = document.getElementById('postosInput');
+            const value = parseInt(input.value);
+            
+            if (isNaN(value) || value <= 0 || !Number.isInteger(value)) {
+                showStepError(2, 'Por favor, insira uma quantidade válida de postos (número inteiro maior que 0).');
+                input.classList.add('invalid');
+                return false;
+            }
+            
+            input.classList.remove('invalid');
+            return true;
+        }
+
+        /**
+         * Valida os preços dos postos.
+         * @returns {boolean} True se válidos.
+         */
+        function validatePrecos() {
+            const inputs = document.querySelectorAll('#precosContainer input');
+            let allValid = true;
+            
+            inputs.forEach((input, index) => {
+                const value = parseFloat(input.value);
+                if (isNaN(value) || value <= 0) {
+                    input.classList.add('invalid');
+                    allValid = false;
+                } else {
+                    input.classList.remove('invalid');
+                }
+            });
+            
+            if (!allValid) {
+                showStepError(3, 'Por favor, insira preços válidos para todos os postos (valores maiores que 0).');
+                return false;
+            }
+            
+            return true;
+        }
+
+        /**
+         * Mostra erro para um step específico.
+         * @param {number} stepIndex - Índice do step.
+         * @param {string} message - Mensagem de erro.
+         */
+        function showStepError(stepIndex, message) {
+            const errorIds = ['distanciaError', 'consumoError', 'postosError', 'precosError'];
+            const errorElement = document.getElementById(errorIds[stepIndex]);
+            if (errorElement) {
+                errorElement.textContent = message;
+                errorElement.classList.remove('hidden');
+            }
+        }
+
+        /**
+         * Limpa erro de um step específico.
+         * @param {number} stepIndex - Índice do step.
+         */
+        function clearStepError(stepIndex) {
+            const errorIds = ['distanciaError', 'consumoError', 'postosError', 'precosError'];
+            const errorElement = document.getElementById(errorIds[stepIndex]);
+            if (errorElement) {
+                errorElement.classList.add('hidden');
+            }
+        }
+
+        /**
+         * Limpa todos os erros.
+         */
+        function clearAllErrors() {
+            const errorElements = document.querySelectorAll('.error-message');
+            errorElements.forEach(element => {
+                element.classList.add('hidden');
+            });
+            
+            const invalidInputs = document.querySelectorAll('.automotive-input.invalid');
+            invalidInputs.forEach(input => {
+                input.classList.remove('invalid');
+            });
+        }
+
+        // =========================
+        // MÓDULO: Gerenciamento de Dados
+        // =========================
+
+        /**
+         * Salva os dados do step atual.
+         * @param {number} stepIndex - Índice do step.
+         */
+        function saveCurrentStepData(stepIndex) {
+            switch(stepIndex) {
+                case 0:
+                    formData.distancia = parseFloat(document.getElementById('distanciaInput').value);
+                    break;
+                case 1:
+                    formData.consumo = parseFloat(document.getElementById('consumoInput').value);
+                    break;
+                case 2:
+                    formData.quantidadePostos = parseInt(document.getElementById('postosInput').value);
+                    break;
+                case 3:
+                    const inputs = document.querySelectorAll('#precosContainer input');
+                    formData.precos = Array.from(inputs).map(input => parseFloat(input.value));
+                    break;
+            }
+        }
+
+        /**
+         * Gera inputs de preços dinamicamente.
+         */
+        function generatePriceInputs() {
+            const container = document.getElementById('precosContainer');
+            container.innerHTML = '';
+            
+            for (let i = 1; i <= formData.quantidadePostos; i++) {
+                const inputGroup = document.createElement('div');
+                inputGroup.style.marginBottom = '1rem';
+                
+                inputGroup.innerHTML = `
+                    <label class="input-label" style="font-size: 0.8rem; margin-bottom: 0.3rem;">
+                        🏪 Posto ${i}
+                    </label>
+                    <input type="number" 
+                           class="automotive-input" 
+                           placeholder="Preço em R$ (ex: 5.89)"
+                           min="0.01" 
+                           step="0.01"
+                           style="margin-bottom: 0.5rem;">
+                `;
+                
+                container.appendChild(inputGroup);
+            }
+        }
+
+        // =========================
+        // MÓDULO: Cálculos e Resultados
+        // =========================
+
+        /**
+         * Finaliza a análise e calcula os resultados.
+         */
+        async function finalizarAnalise() {
+            if (!validateCurrentStep(3)) {
+                return;
+            }
+            
+            saveCurrentStepData(3);
+            
+            // Mostra loading
+            showLoading();
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            hideLoading();
+            
+            // Calcula e exibe resultados
+            calcularResultados();
+        }
+
+        /**
+         * Realiza todos os cálculos e exibe os resultados.
+         */
+        function calcularResultados() {
+            const { distancia, consumo, precos } = formData;
+            
+            // Consumo necessário para ida
+            const consumoNecessarioLitros = distancia / consumo;
+            updateEfficiencyGauge(consumo);
+            showResults();
+            
+            writeMessage(`🚗 Distância analisada: ${distancia} km | Eficiência: ${consumo} km/L`, 'info');
+            writeMessage(`⛽ Consumo necessário: ${consumoNecessarioLitros.toFixed(2)} litros`, 'success');
+            
+            // Estatísticas dos preços
+            const somaPrecos = precos.reduce((sum, preco) => sum + preco, 0);
+            const mediaPrecos = somaPrecos / precos.length;
+            const menorPreco = Math.min(...precos);
+            
+            // Exibe preços dos postos
+            precos.forEach((preco, index) => {
+                writeMessage(`🏪 Posto ${index + 1}: R$ ${preco.toFixed(2)}`, 'info');
+            });
+            
             addSeparator();
-
+            
+            writeMessage(`📊 Média dos valores pesquisados: R$ ${mediaPrecos.toFixed(2)}`, 'success');
+            writeMessage(`💰 Melhor preço encontrado: R$ ${menorPreco.toFixed(2)}`, 'success');
+            
+            addSeparator();
+            
             // Gasto diário ida e volta
-            let gastoDiario = 2 * (consumoNecessarioLitros * menorValor);
+            const gastoDiario = 2 * (consumoNecessarioLitros * menorPreco);
             writeMessage(`🔄 Gasto diário (ida e volta): R$ ${gastoDiario.toFixed(2)}`, 'success');
-
+            
             // Projeções semanais e mensais
-            let gastoSemanal = gastoDiario * 5;
-            let gastoMensal = gastoDiario * 22;
+            const gastoSemanal = gastoDiario * 5;
+            const gastoMensal = gastoDiario * 22;
             writeMessage(`📅 Projeção semanal: R$ ${gastoSemanal.toFixed(2)}`, 'info');
             writeMessage(`📆 Projeção mensal: R$ ${gastoMensal.toFixed(2)}`, 'info');
-
+            
             // Economia potencial
-            let economiaMaxima = 2 * (consumoNecessarioLitros * (mediaValoresPesquisados - menorValor));
+            const economiaMaxima = 2 * (consumoNecessarioLitros * (mediaPrecos - menorPreco));
             if (economiaMaxima > 0) {
                 writeMessage(`💡 Economia diária escolhendo o melhor posto: R$ ${economiaMaxima.toFixed(2)}`, 'success');
             }
-        } else {
-            writeMessage("Não foi possível calcular os valores pois não foram inseridos dados válidos.", 'error');
+            
+            // Oculta container de inputs
+            document.getElementById('inputContainer').classList.add('hidden');
+            document.getElementById('progressIndicator').classList.add('hidden');
+            
+            // Mostra botão para nova análise
+            setTimeout(() => {
+                const newAnalysisButton = document.createElement('button');
+                newAnalysisButton.className = 'start-button';
+                newAnalysisButton.innerHTML = `
+                    <span class="button-icon">
+                        <svg width="20" height="20" viewBox="0 0 342 142" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="fordGradientBtn" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#ffffff;stop-opacity:0.8" />
+                                </linearGradient>
+                            </defs>
+                            <ellipse cx="171" cy="71" rx="171" ry="71" fill="url(#fordGradientBtn)"/>
+                            <text x="171" y="80" font-family="Arial, sans-serif" font-size="32" font-weight="bold" text-anchor="middle" fill="#ff6b35">FORD</text>
+                        </svg>
+                    </span>
+                    Nova Análise
+                `;
+                newAnalysisButton.onclick = () => {
+                    location.reload();
+                };
+                
+                document.querySelector('.main-card').insertBefore(
+                    newAnalysisButton, 
+                    document.getElementById('output')
+                );
+            }, 1000);
         }
-    }
 
-    // =========================
-    // MÓDULO: Efeito Visual de Partículas
-    // =========================
+        // =========================
+        // MÓDULO: Efeito Visual de Partículas
+        // =========================
 
-    /**
-     * Cria uma partícula animada no fundo da tela.
-     */
-    function createParticle() {
-        const particle = document.createElement('div');
-        particle.style.cssText = `
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            background: #00a2ff;
-            border-radius: 50%;
-            pointer-events: none;
-            opacity: 0.6;
-            left: ${Math.random() * 100}vw;
-            top: 100vh;
-            animation: particleFloat ${3 + Math.random() * 4}s linear forwards;
-        `;
-        document.body.appendChild(particle);
-        setTimeout(() => { particle.remove(); }, 7000);
-    }
+        /**
+         * Cria uma partícula animada no fundo da tela.
+         */
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.style.cssText = `
+                position: absolute;
+                width: 2px;
+                height: 2px;
+                background: #00a2ff;
+                border-radius: 50%;
+                pointer-events: none;
+                opacity: 0.6;
+                left: ${Math.random() * 100}vw;
+                top: 100vh;
+                animation: particleFloat ${3 + Math.random() * 4}s linear forwards;
+            `;
+            document.body.appendChild(particle);
+            setTimeout(() => { particle.remove(); }, 7000);
+        }
 
-    /**
-     * Adiciona o estilo da animação das partículas e inicia o efeito.
-     */
-    function setupParticleAnimation() {
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes particleFloat {
-                to {
-                    transform: translateY(-100vh) translateX(${Math.random() * 200 - 100}px);
-                    opacity: 0;
+        /**
+         * Adiciona o estilo da animação das partículas e inicia o efeito.
+         */
+        function setupParticleAnimation() {
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes particleFloat {
+                    to {
+                        transform: translateY(-100vh) translateX(${Math.random() * 200 - 100}px);
+                        opacity: 0;
+                    }
                 }
-            }
-        `;
-        document.head.appendChild(style);
-        setInterval(createParticle, 600);
-    }
+            `;
+            document.head.appendChild(style);
+            setInterval(createParticle, 800);
+        }
 
-    // =========================
-    // MÓDULO: Fluxo Principal
-    // =========================
+        // =========================
+        // INICIALIZAÇÃO
+        // =========================
 
-    /**
-     * Inicia o fluxo principal da aplicação ao clicar no botão.
-     */
-    async function iniciarAnalise() {
-        // Limpa resultados anteriores e reseta gauge
-        document.getElementById('resultContent').innerHTML = '';
-        document.getElementById('output').classList.add('hidden');
-        updateEfficiencyGauge(0);
+        // Adiciona o evento ao botão principal
+        document.getElementById('startButton').addEventListener('click', iniciarAnalise);
 
-        showLoading();
-        // Simula processamento visual
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        hideLoading();
+        // Adiciona eventos de Enter nos inputs
+        document.addEventListener('DOMContentLoaded', () => {
+            // Input de distância
+            document.getElementById('distanciaInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    proximoStep(0);
+                }
+            });
+            
+            // Input de consumo
+            document.getElementById('consumoInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    proximoStep(1);
+                }
+            });
+            
+            // Input de postos
+            document.getElementById('postosInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    proximoStep(2);
+                }
+            });
+        });
 
-        // Solicita distância percorrida
-        let distanciaPercorrida = await getPositiveNumber("Qual a distância percorrida da sua casa até seu trabalho (em km)?");
-        if (distanciaPercorrida === null) return;
-
-        // Solicita consumo médio
-        let consumoMedio = await getPositiveNumber("Qual o consumo médio do seu veículo (em Km/L)?");
-        if (consumoMedio === null) return;
-
-        // Solicita quantidade de postos pesquisados
-        let quantidadePostos = await getPositiveInteger("Em quantos postos você pesquisou preços?");
-        if (quantidadePostos === null) return;
-
-        // Calcula e exibe resultados
-        await calcularResultados(distanciaPercorrida, consumoMedio, quantidadePostos);
-    }
-
-    // =========================
-    // INICIALIZAÇÃO
-    // =========================
-
-    // Adiciona o evento ao botão principal
-    document.getElementById('startButton').addEventListener('click', iniciarAnalise);
-
-    // Inicia o efeito de partículas no fundo
-    setupParticleAnimation();
-
-</script>
+        // Inicia o efeito de partículas no fundo
+        setupParticleAnimation();
+    </script>
+</body>
+</html>
