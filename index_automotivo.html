@@ -11,7 +11,7 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Roboto', sans-serif;
             background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 25%, #2c2c2c 50%, #1a1a1a 75%, #0a0a0a 100%);
@@ -32,7 +32,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-image: 
+            background-image:
                 linear-gradient(rgba(0, 162, 255, 0.1) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(0, 162, 255, 0.1) 1px, transparent 1px);
             background-size: 50px 50px;
@@ -91,7 +91,7 @@
             border: 2px solid #333;
             border-radius: 20px;
             padding: 2.5rem;
-            box-shadow: 
+            box-shadow:
                 0 25px 50px rgba(0, 0, 0, 0.5),
                 inset 0 1px 0 rgba(255, 255, 255, 0.1),
                 inset 0 -1px 0 rgba(0, 0, 0, 0.5);
@@ -327,7 +327,7 @@
         .automotive-input:focus {
             outline: none;
             border-color: #00a2ff;
-            box-shadow: 
+            box-shadow:
                 inset 0 2px 5px rgba(0, 0, 0, 0.3),
                 0 0 15px rgba(0, 162, 255, 0.3);
             background: linear-gradient(145deg, #3a3a3a, #2f2f2f);
@@ -623,7 +623,7 @@
         /* Validação visual */
         .automotive-input.invalid {
             border-color: #ef4444;
-            box-shadow: 
+            box-shadow:
                 inset 0 2px 5px rgba(0, 0, 0, 0.3),
                 0 0 15px rgba(239, 68, 68, 0.3);
         }
@@ -709,7 +709,7 @@
         <div class="gear-icon gear-3">⚙</div>
     </div>
     <!-- Pista automotiva -->
-    <div class="racing-track"></div> 
+    <div class="racing-track"></div>
 
     <div class="main-card">
         <!-- Header -->
@@ -722,10 +722,7 @@
 
         <!-- Indicador de progresso -->
         <div id="progressIndicator" class="progress-indicator hidden">
-            <div class="progress-dot" data-step="0"></div>
-            <div class="progress-dot" data-step="1"></div>
-            <div class="progress-dot" data-step="2"></div>
-            <div class="progress-dot" data-step="3"></div>
+            <!-- Os pontos serão gerados dinamicamente pelo JavaScript -->
         </div>
 
         <!-- Botão principal -->
@@ -740,11 +737,11 @@
             <!-- Step 1: Distância -->
             <div class="input-step" data-step="0">
                 <label class="input-label">🚗 Distância Percorrida</label>
-                <input type="number" 
-                       id="distanciaInput" 
-                       class="automotive-input" 
+                <input type="number"
+                       id="distanciaInput"
+                       class="automotive-input"
                        placeholder="Digite a distância em km (ex: 25.5)"
-                       min="0.1" 
+                       min="0.1"
                        step="0.1">
                 <div id="distanciaError" class="error-message hidden"></div>
                 <div class="nav-buttons">
@@ -756,11 +753,11 @@
             <!-- Step 2: Consumo -->
             <div class="input-step" data-step="1">
                 <label class="input-label">⛽ Consumo do Veículo</label>
-                <input type="number" 
-                       id="consumoInput" 
-                       class="automotive-input" 
+                <input type="number"
+                       id="consumoInput"
+                       class="automotive-input"
                        placeholder="Digite o consumo em km/L (ex: 12.5)"
-                       min="0.1" 
+                       min="0.1"
                        step="0.1">
                 <div id="consumoError" class="error-message hidden"></div>
                 <div class="nav-buttons">
@@ -772,11 +769,11 @@
             <!-- Step 3: Quantidade de postos -->
             <div class="input-step" data-step="2">
                 <label class="input-label">🏪 Quantidade de Postos</label>
-                <input type="number" 
-                       id="postosInput" 
-                       class="automotive-input" 
+                <input type="number"
+                       id="postosInput"
+                       class="automotive-input"
                        placeholder="Quantos postos você pesquisou? (ex: 3)"
-                       min="1" 
+                       min="1"
                        step="1">
                 <div id="postosError" class="error-message hidden"></div>
                 <div class="nav-buttons">
@@ -785,18 +782,8 @@
                 </div>
             </div>
 
-            <!-- Step 4: Preços dos postos -->
-            <div class="input-step" data-step="3">
-                <label class="input-label">💰 Preços dos Postos</label>
-                <div id="precosContainer">
-                    <!-- Inputs de preços serão gerados dinamicamente -->
-                </div>
-                <div id="precosError" class="error-message hidden"></div>
-                <div class="nav-buttons">
-                    <button class="nav-button secondary" onclick="stepAnterior(3)">Anterior</button>
-                    <button class="nav-button primary" onclick="finalizarAnalise()">Calcular</button>
-                </div>
-            </div>
+            <!-- Dynamic price steps will be inserted here by JavaScript -->
+
         </div>
 
         <!-- Animação de loading -->
@@ -894,20 +881,20 @@
             const fuelLevel = document.getElementById('fuelLevel');
             const efficiencyText = document.getElementById('efficiencyText');
             const indicator = document.getElementById('efficiencyIndicator');
-            
+
             if (consumoMedio <= 0) {
                 indicator.classList.add('hidden');
                 fuelLevel.style.width = '0%';
                 return;
             }
-            
+
             indicator.classList.remove('hidden');
             let efficiencyPercentage = 0;
             if (consumoMedio < 10) efficiencyPercentage = 25;
             else if (consumoMedio < 15) efficiencyPercentage = 50;
             else if (consumoMedio < 20) efficiencyPercentage = 75;
             else efficiencyPercentage = 100;
-            
+
             fuelLevel.style.width = `${efficiencyPercentage}%`;
             efficiencyText.textContent = `Nível de Eficiência do Veículo: ${efficiencyPercentage}%`;
         }
@@ -935,9 +922,9 @@
         function showResults() {
             document.getElementById('output').classList.remove('hidden');
             setTimeout(() => {
-                document.getElementById('output').scrollIntoView({ 
-                    behavior: 'smooth', 
-                    block: 'nearest' 
+                document.getElementById('output').scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'nearest'
                 });
             }, 300);
         }
@@ -947,16 +934,43 @@
         // =========================
 
         /**
+         * Configura os pontos do indicador de progresso dinamicamente.
+         * Chamado quando a quantidade de postos é definida.
+         */
+        function setupProgressDots() {
+            const progressIndicator = document.getElementById('progressIndicator');
+            progressIndicator.innerHTML = ''; // Limpa os pontos existentes
+
+            // Adiciona os 3 pontos iniciais (Distância, Consumo, Quantidade de Postos)
+            for (let i = 0; i < 3; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'progress-dot';
+                dot.dataset.step = i;
+                progressIndicator.appendChild(dot);
+            }
+
+            // Adiciona pontos para cada posto (preço), começando do step 3
+            for (let i = 0; i < formData.quantidadePostos; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'progress-dot';
+                dot.dataset.step = 3 + i; // Os steps para preços começam do índice 3
+                progressIndicator.appendChild(dot);
+            }
+        }
+
+
+        /**
          * Atualiza o indicador de progresso.
          * @param {number} step - Step atual.
          */
         function updateProgressIndicator(step) {
             const dots = document.querySelectorAll('.progress-dot');
-            dots.forEach((dot, index) => {
+            dots.forEach((dot) => {
+                const dotStep = parseInt(dot.dataset.step);
                 dot.classList.remove('active', 'completed');
-                if (index < step) {
+                if (dotStep < step) {
                     dot.classList.add('completed');
-                } else if (index === step) {
+                } else if (dotStep === step) {
                     dot.classList.add('active');
                 }
             });
@@ -969,31 +983,37 @@
          */
         function showStep(stepIndex, direction = 'next') {
             const steps = document.querySelectorAll('.input-step');
-            
-            // Remove todas as classes de todos os steps
-            steps.forEach((step, index) => {
+
+            steps.forEach((step) => {
                 step.classList.remove('active', 'prev');
-                
-                if (index === stepIndex) {
-                    // Step que será ativado
-                    step.classList.add('active');
-                } else {
-                    // Steps que não estão ativos
-                    if (index < stepIndex) {
+                // Removido: step.classList.add('hidden'); // Esta linha impedia a animação
+            });
+
+            const currentStepElement = document.querySelector(`.input-step[data-step="${stepIndex}"]`);
+
+            if (currentStepElement) {
+                currentStepElement.classList.remove('hidden'); // Garante que o elemento está visível para animar
+                // Removido: currentStepElement.classList.remove('hidden'); // Esta linha impedia a animação
+                currentStepElement.classList.add('active');
+
+                steps.forEach((step) => {
+                    const stepData = parseInt(step.dataset.step);
+                    if (stepData < stepIndex) {
                         step.classList.add('prev');
                     }
-                }
-            });
-            
+                });
+            }
+
             // Atualiza indicador de progresso
             updateProgressIndicator(stepIndex);
-            
+
             // Foca no input do step atual após a animação
             setTimeout(() => {
-                const currentStepElement = steps[stepIndex];
-                const input = currentStepElement.querySelector('input');
-                if (input) {
-                    input.focus();
+                if (currentStepElement) {
+                    const input = currentStepElement.querySelector('input');
+                    if (input) {
+                        input.focus();
+                    }
                 }
             }, 450); // Aguarda a animação terminar
         }
@@ -1010,17 +1030,24 @@
                 precos: []
             };
             currentStep = 0;
-            
+
             // Limpa resultados anteriores
             document.getElementById('resultContent').innerHTML = '';
             document.getElementById('output').classList.add('hidden');
             updateEfficiencyGauge(0);
-            
+
             // Mostra container de inputs e indicador de progresso
             document.getElementById('startButton').classList.add('hidden');
             document.getElementById('progressIndicator').classList.remove('hidden');
             document.getElementById('inputContainer').classList.remove('hidden');
+
+            // Remove quaisquer steps de preço dinâmicos antigos para evitar inconsistências
+            const dynamicPriceSteps = document.querySelectorAll('.input-step[data-price-step="true"]');
+            dynamicPriceSteps.forEach(step => step.remove());
             
+            // Re-setup progress dots for initial steps
+            setupProgressDots(); // Call initially to set up dots for 0, 1, 2
+
             // Mostra primeiro step
             showStep(0);
         }
@@ -1032,14 +1059,20 @@
         function proximoStep(stepIndex) {
             if (validateCurrentStep(stepIndex)) {
                 saveCurrentStepData(stepIndex);
-                
-                if (stepIndex === 2) {
-                    // Gera inputs de preços dinamicamente
-                    generatePriceInputs();
+
+                if (stepIndex === 2) { // Após inserir a quantidade de postos
+                    generatePriceInputs(); // Gera os inputs de preço como novos steps
+                    setupProgressDots(); // Re-cria os pontos de progresso para incluir os novos steps
+                    currentStep = 3; // O próximo step é o primeiro input de preço
+                } else if (stepIndex >= 3 && stepIndex < (3 + formData.quantidadePostos - 1)) { // Se for um input de preço e não o último
+                    currentStep = stepIndex + 1;
+                } else if (stepIndex === (3 + formData.quantidadePostos - 1)) { // Se for o último input de preço
+                    finalizarAnalise();
+                    return; // Não avança para um próximo step, vai para a análise
+                } else { // Steps iniciais (distância, consumo)
+                    currentStep = stepIndex + 1;
                 }
-                
-                currentStep = stepIndex + 1;
-                showStep(currentStep, 'next'); // Entra da direita
+                showStep(currentStep, 'next');
             }
         }
 
@@ -1048,8 +1081,14 @@
          * @param {number} stepIndex - Step atual.
          */
         function stepAnterior(stepIndex) {
-            currentStep = stepIndex - 1;
-            showStep(currentStep, 'prev'); // Entra da esquerda
+            if (stepIndex === 3) { // Se estiver no primeiro input de preço, volta para quantidade de postos
+                currentStep = 2;
+            } else if (stepIndex > 3) { // Se estiver em um input de preço posterior, volta para o anterior
+                currentStep = stepIndex - 1;
+            } else { // Steps iniciais (consumo, distância)
+                currentStep = stepIndex - 1;
+            }
+            showStep(currentStep, 'prev');
         }
 
         /**
@@ -1060,9 +1099,13 @@
             document.getElementById('progressIndicator').classList.add('hidden');
             document.getElementById('startButton').classList.remove('hidden');
             document.getElementById('output').classList.add('hidden');
-            
+
             // Limpa erros
             clearAllErrors();
+
+            // Remove os inputs de preço dinâmicos
+            const dynamicPriceSteps = document.querySelectorAll('.input-step[data-price-step="true"]');
+            dynamicPriceSteps.forEach(step => step.remove());
         }
 
         // =========================
@@ -1075,8 +1118,8 @@
          * @returns {boolean} True se válido.
          */
         function validateCurrentStep(stepIndex) {
-            clearStepError(stepIndex);
-            
+            clearAllErrors(); // Limpa todos os erros antes de validar o step atual
+
             switch(stepIndex) {
                 case 0:
                     return validateDistancia();
@@ -1084,10 +1127,8 @@
                     return validateConsumo();
                 case 2:
                     return validateQuantidadePostos();
-                case 3:
-                    return validatePrecos();
-                default:
-                    return false;
+                default: // Para steps de preço (stepIndex >= 3)
+                    return validatePrecoIndividual(stepIndex);
             }
         }
 
@@ -1098,13 +1139,13 @@
         function validateDistancia() {
             const input = document.getElementById('distanciaInput');
             const value = parseFloat(input.value);
-            
+
             if (isNaN(value) || value <= 0) {
                 showStepError(0, 'Por favor, insira uma distância válida maior que 0.');
                 input.classList.add('invalid');
                 return false;
             }
-            
+
             input.classList.remove('invalid');
             return true;
         }
@@ -1116,13 +1157,13 @@
         function validateConsumo() {
             const input = document.getElementById('consumoInput');
             const value = parseFloat(input.value);
-            
+
             if (isNaN(value) || value <= 0) {
                 showStepError(1, 'Por favor, insira um consumo válido maior que 0.');
                 input.classList.add('invalid');
                 return false;
             }
-            
+
             input.classList.remove('invalid');
             return true;
         }
@@ -1134,42 +1175,44 @@
         function validateQuantidadePostos() {
             const input = document.getElementById('postosInput');
             const value = parseInt(input.value);
-            
+
             if (isNaN(value) || value <= 0 || !Number.isInteger(value)) {
                 showStepError(2, 'Por favor, insira uma quantidade válida de postos (número inteiro maior que 0).');
                 input.classList.add('invalid');
                 return false;
             }
-            
+
             input.classList.remove('invalid');
             return true;
         }
 
         /**
-         * Valida os preços dos postos.
-         * @returns {boolean} True se válidos.
+         * Valida um preço individual de posto.
+         * @param {number} stepIndex - O índice do step (que corresponde ao índice do posto + 3).
+         * @returns {boolean} True se válido.
          */
-        function validatePrecos() {
-            const inputs = document.querySelectorAll('#precosContainer input');
-            let allValid = true;
-            
-            inputs.forEach((input, index) => {
-                const value = parseFloat(input.value);
-                if (isNaN(value) || value <= 0) {
-                    input.classList.add('invalid');
-                    allValid = false;
-                } else {
-                    input.classList.remove('invalid');
+        function validatePrecoIndividual(stepIndex) {
+            const priceIndex = stepIndex - 3; // Calcula o índice do preço no array formData.precos
+            const input = document.getElementById(`priceInput_${priceIndex}`);
+            const errorElement = document.getElementById(`priceError_${priceIndex}`);
+            const value = parseFloat(input.value);
+
+            if (isNaN(value) || value <= 0) {
+                input.classList.add('invalid');
+                if (errorElement) {
+                    errorElement.textContent = `Por favor, insira um preço válido para o Posto ${priceIndex + 1}.`;
+                    errorElement.classList.remove('hidden');
                 }
-            });
-            
-            if (!allValid) {
-                showStepError(3, 'Por favor, insira preços válidos para todos os postos (valores maiores que 0).');
                 return false;
+            } else {
+                input.classList.remove('invalid');
+                if (errorElement) {
+                    errorElement.classList.add('hidden');
+                }
+                return true;
             }
-            
-            return true;
         }
+
 
         /**
          * Mostra erro para um step específico.
@@ -1177,8 +1220,13 @@
          * @param {string} message - Mensagem de erro.
          */
         function showStepError(stepIndex, message) {
-            const errorIds = ['distanciaError', 'consumoError', 'postosError', 'precosError'];
-            const errorElement = document.getElementById(errorIds[stepIndex]);
+            let errorElementId;
+            if (stepIndex === 0) errorElementId = 'distanciaError';
+            else if (stepIndex === 1) errorElementId = 'consumoError';
+            else if (stepIndex === 2) errorElementId = 'postosError';
+            // Para steps de preço, os erros individuais são tratados por validatePrecoIndividual
+            
+            const errorElement = document.getElementById(errorElementId);
             if (errorElement) {
                 errorElement.textContent = message;
                 errorElement.classList.remove('hidden');
@@ -1190,8 +1238,12 @@
          * @param {number} stepIndex - Índice do step.
          */
         function clearStepError(stepIndex) {
-            const errorIds = ['distanciaError', 'consumoError', 'postosError', 'precosError'];
-            const errorElement = document.getElementById(errorIds[stepIndex]);
+            let errorElementId;
+            if (stepIndex === 0) errorElementId = 'distanciaError';
+            else if (stepIndex === 1) errorElementId = 'consumoError';
+            else if (stepIndex === 2) errorElementId = 'postosError';
+            
+            const errorElement = document.getElementById(errorElementId);
             if (errorElement) {
                 errorElement.classList.add('hidden');
             }
@@ -1205,7 +1257,7 @@
             errorElements.forEach(element => {
                 element.classList.add('hidden');
             });
-            
+
             const invalidInputs = document.querySelectorAll('.automotive-input.invalid');
             invalidInputs.forEach(input => {
                 input.classList.remove('invalid');
@@ -1229,39 +1281,71 @@
                     formData.consumo = parseFloat(document.getElementById('consumoInput').value);
                     break;
                 case 2:
-                    formData.quantidadePostos = parseInt(document.getElementById('postosInput').value);
+                    const newQuantidadePostos = parseInt(document.getElementById('postosInput').value);
+                    // Se a quantidade de postos mudou, limpa os preços anteriores
+                    if (formData.quantidadePostos !== newQuantidadePostos) {
+                        formData.precos = []; // Limpa o array de preços se a quantidade de postos mudar
+                        // Remove os steps de preço antigos do DOM
+                        const oldPriceSteps = document.querySelectorAll('.input-step[data-price-step="true"]');
+                        oldPriceSteps.forEach(step => step.remove());
+                    }
+                    formData.quantidadePostos = newQuantidadePostos;
                     break;
-                case 3:
-                    const inputs = document.querySelectorAll('#precosContainer input');
-                    formData.precos = Array.from(inputs).map(input => parseFloat(input.value));
+                default: // Para steps de preço (stepIndex >= 3)
+                    const priceIndex = stepIndex - 3;
+                    const input = document.getElementById(`priceInput_${priceIndex}`);
+                    formData.precos[priceIndex] = parseFloat(input.value);
                     break;
             }
         }
 
         /**
-         * Gera inputs de preços dinamicamente.
+         * Gera inputs de preços dinamicamente como novos steps.
          */
         function generatePriceInputs() {
-            const container = document.getElementById('precosContainer');
-            container.innerHTML = '';
+            const inputContainer = document.getElementById('inputContainer');
             
-            for (let i = 1; i <= formData.quantidadePostos; i++) {
-                const inputGroup = document.createElement('div');
-                inputGroup.style.marginBottom = '1rem';
-                
-                inputGroup.innerHTML = `
-                    <label class="input-label" style="font-size: 0.8rem; margin-bottom: 0.3rem;">
-                        🏪 Posto ${i}
-                    </label>
-                    <input type="number" 
-                           class="automotive-input" 
+            // Remove quaisquer steps de preço dinâmicos antigos para evitar inconsistências
+            const oldPriceSteps = document.querySelectorAll('.input-step[data-price-step="true"]');
+            oldPriceSteps.forEach(step => step.remove());
+
+            for (let i = 0; i < formData.quantidadePostos; i++) {
+                const priceStepElement = document.createElement('div');
+                priceStepElement.className = 'input-step';
+                priceStepElement.dataset.step = 3 + i; // Define o data-step para cada preço
+                priceStepElement.dataset.priceStep = "true"; // Marca como step de preço dinâmico
+
+                const isLastPriceStep = (i === formData.quantidadePostos - 1);
+                const nextButtonText = isLastPriceStep ? 'Calcular' : 'Próximo';
+                const nextButtonAction = isLastPriceStep ? 'finalizarAnalise()' : `proximoStep(${3 + i})`;
+                const prevButtonAction = `stepAnterior(${3 + i})`;
+
+                priceStepElement.innerHTML = `
+                    <label class="input-label">💰 Preço Posto ${i + 1}</label>
+                    <input type="number"
+                           id="priceInput_${i}"
+                           class="automotive-input"
                            placeholder="Preço em R$ (ex: 5.89)"
-                           min="0.01" 
+                           min="0.01"
                            step="0.01"
-                           style="margin-bottom: 0.5rem;">
+                           value="${formData.precos[i] || ''}">
+                    <div id="priceError_${i}" class="error-message hidden"></div>
+                    <div class="nav-buttons">
+                        <button class="nav-button secondary" onclick="${prevButtonAction}">Anterior</button>
+                        <button class="nav-button primary" onclick="${nextButtonAction}">${nextButtonText}</button>
+                    </div>
                 `;
-                
-                container.appendChild(inputGroup);
+
+                inputContainer.appendChild(priceStepElement);
+
+                // Adiciona evento de Enter para cada input de preço
+                const priceInput = document.getElementById(`priceInput_${i}`);
+                priceInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        // Simula o clique no botão "Próximo" ou "Calcular"
+                        document.querySelector(`.input-step[data-step="${3 + i}"] .nav-button.primary`).click();
+                    }
+                });
             }
         }
 
@@ -1273,17 +1357,42 @@
          * Finaliza a análise e calcula os resultados.
          */
         async function finalizarAnalise() {
-            if (!validateCurrentStep(3)) {
+            // Re-coleta todos os preços dos inputs do DOM para garantir que formData.precos esteja totalmente atualizado.
+            // Esta é uma medida de segurança, pois os passos individuais deveriam ter salvado seus dados.
+            const priceInputs = document.querySelectorAll('.input-step[data-price-step="true"] input');
+            formData.precos = []; // Limpa e repopula
+            let allPricesValidAtFinalization = true; // Adicionado para uma verificação extra
+
+            priceInputs.forEach((input, index) => {
+                const value = parseFloat(input.value);
+                if (isNaN(value) || value <= 0) {
+                    // Isso indica um problema, pois a validação deveria ter pego isso antes.
+                    // Para robustez, vamos marcá-lo como inválido e impedir o cálculo.
+                    input.classList.add('invalid');
+                    const errorElement = document.getElementById(`priceError_${index}`);
+                    if (errorElement) {
+                        errorElement.textContent = `Por favor, insira um preço válido para o Posto ${index + 1}.`;
+                        errorElement.classList.remove('hidden');
+                    }
+                    allPricesValidAtFinalization = false;
+                } else {
+                    formData.precos[index] = value;
+                    input.classList.remove('invalid');
+                    const errorElement = document.getElementById(`priceError_${index}`);
+                    if (errorElement) errorElement.classList.add('hidden');
+                }
+            });
+
+            if (!allPricesValidAtFinalization) {
+                // Se algum preço ainda for inválido, impede a finalização e mostra os erros.
                 return;
             }
-            
-            saveCurrentStepData(3);
             
             // Mostra loading
             showLoading();
             await new Promise(resolve => setTimeout(resolve, 2000));
             hideLoading();
-            
+
             // Calcula e exibe resultados
             calcularResultados();
         }
@@ -1293,52 +1402,52 @@
          */
         function calcularResultados() {
             const { distancia, consumo, precos } = formData;
-            
+
             // Consumo necessário para ida
             const consumoNecessarioLitros = distancia / consumo;
             updateEfficiencyGauge(consumo);
             showResults();
-            
+
             writeMessage(`🚗 Distância analisada: ${distancia} km | Eficiência: ${consumo} km/L`, 'info');
             writeMessage(`⛽ Consumo necessário: ${consumoNecessarioLitros.toFixed(2)} litros`, 'success');
-            
+
             // Estatísticas dos preços
             const somaPrecos = precos.reduce((sum, preco) => sum + preco, 0);
             const mediaPrecos = somaPrecos / precos.length;
             const menorPreco = Math.min(...precos);
-            
+
             // Exibe preços dos postos
             precos.forEach((preco, index) => {
                 writeMessage(`🏪 Posto ${index + 1}: R$ ${preco.toFixed(2)}`, 'info');
             });
-            
+
             addSeparator();
-            
+
             writeMessage(`📊 Média dos valores pesquisados: R$ ${mediaPrecos.toFixed(2)}`, 'success');
             writeMessage(`💰 Melhor preço encontrado: R$ ${menorPreco.toFixed(2)}`, 'success');
-            
+
             addSeparator();
-            
+
             // Gasto diário ida e volta
             const gastoDiario = 2 * (consumoNecessarioLitros * menorPreco);
-            writeMessage(`🔄 Gasto diário (ida e volta): R$ ${gastoDiario.toFixed(2)}`, 'success');
-            
+            writeMessage(`💰 Gasto diário (ida e volta): R$ ${gastoDiario.toFixed(2)}`, 'success');
+
             // Projeções semanais e mensais
             const gastoSemanal = gastoDiario * 5;
             const gastoMensal = gastoDiario * 22;
             writeMessage(`📅 Projeção semanal: R$ ${gastoSemanal.toFixed(2)}`, 'info');
             writeMessage(`📆 Projeção mensal: R$ ${gastoMensal.toFixed(2)}`, 'info');
-            
+
             // Economia potencial
             const economiaMaxima = 2 * (consumoNecessarioLitros * (mediaPrecos - menorPreco));
             if (economiaMaxima > 0) {
                 writeMessage(`💡 Economia diária escolhendo o melhor posto: R$ ${economiaMaxima.toFixed(2)}`, 'success');
             }
-            
+
             // Oculta container de inputs
             document.getElementById('inputContainer').classList.add('hidden');
             document.getElementById('progressIndicator').classList.add('hidden');
-            
+
             // Mostra botão para nova análise
             setTimeout(() => {
                 const newAnalysisButton = document.createElement('button');
@@ -1353,9 +1462,9 @@
                 newAnalysisButton.onclick = () => {
                     location.reload();
                 };
-                
+
                 document.querySelector('.main-card').insertBefore(
-                    newAnalysisButton, 
+                    newAnalysisButton,
                     document.getElementById('output')
                 );
             }, 1000);
@@ -1410,7 +1519,7 @@
         // Adiciona o evento ao botão principal
         document.getElementById('startButton').addEventListener('click', iniciarAnalise);
 
-        // Adiciona eventos de Enter nos inputs
+        // Adiciona eventos de Enter nos inputs estáticos
         document.addEventListener('DOMContentLoaded', () => {
             // Input de distância
             document.getElementById('distanciaInput').addEventListener('keypress', (e) => {
@@ -1418,14 +1527,14 @@
                     proximoStep(0);
                 }
             });
-            
+
             // Input de consumo
             document.getElementById('consumoInput').addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
                     proximoStep(1);
                 }
             });
-            
+
             // Input de postos
             document.getElementById('postosInput').addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
